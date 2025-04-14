@@ -1,6 +1,5 @@
 return {
   "3rd/image.nvim",
-  dependencies = { "luarocks.nvim" },
   config = function()
     require("image").setup({
       backend = "kitty", -- or "ueberzug" or "wezterm"

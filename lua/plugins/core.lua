@@ -27,12 +27,13 @@ return {
 
       -- Set menu
       dashboard.section.buttons.val = {
-        dashboard.button("e", "  File Explorer", "<leader>e"),
-        dashboard.button("f", "  Find File", "<leader>ff"),
-        dashboard.button("r", "  Recent Files", "<leader>fr"),
-        dashboard.button("t", "  Find Text", "<leader>fg"),
-        dashboard.button("c", "  Configuration", "<leader>c"),
-        dashboard.button("q", "  Quit", ":qa<CR>"),
+        dashboard.button("e", "  File Explorer", "<leader>e"),
+        dashboard.button("f", "  Find File", "<leader>ff"),
+        dashboard.button("r", "  Recent Files", "<leader>fr"),
+        dashboard.button("t", "  Find Text", "<leader>fg"),
+        dashboard.button("c", "  Configuration", "<leader>c"),
+        dashboard.button("k", "  Keymaps", "<leader>kb"),
+        dashboard.button("q", "  Quit", ":qa<CR>"),
       }
 
       -- Set footer
@@ -169,7 +170,10 @@ return {
       -- Keybindings for buffer navigation and closing
       vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous buffer" })
       vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
-      vim.keymap.set("n", "<S-q>", "<cmd>Bdelete<cr>", { desc = "Close buffer" })
+      vim.keymap.set("n", "<S-q>", function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        require("bufdelete").bufdelete(bufnr, true)
+      end, { desc = "Close buffer" })
       vim.keymap.set("n", "<leader>ww", function()
         vim.cmd("only")  -- Close all other windows
         vim.cmd("Alpha")  -- Show dashboard
@@ -186,8 +190,8 @@ return {
         options = {
           icons_enabled = true,
           theme = "auto",
-          component_separators = { left = "", right = "" },
-          section_separators = { left = "", right = "" },
+          component_separators = { left = "", right = "" },
+          section_separators = { left = "", right = "" },
           disabled_filetypes = {
             statusline = {},
             winbar = {},
@@ -228,91 +232,31 @@ return {
   -- Indent Blankline
   {
     "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     config = function()
-      vim.opt.list = true
-      vim.opt.listchars:append("eol:↴")
-
-      require("indent_blankline").setup({
-        char = "▏",
-        show_trailing_blankline_indent = false,
-        show_first_indent_level = false,
-        use_treesitter = true,
-        show_current_context = true,
-        show_current_context_start = true,
-        context_patterns = {
-          "class",
-          "return",
-          "function",
-          "method",
-          "^if",
-          "^while",
-          "jsx_element",
-          "^for",
-          "^object",
-          "^table",
-          "block",
-          "arguments",
-          "if_statement",
-          "else_clause",
-          "jsx_element",
-          "jsx_self_closing_element",
-          "try_statement",
-          "catch_clause",
-          "import_statement",
-          "operation_type",
+      require("ibl").setup({
+        indent = {
+          char = "▏",
+          tab_char = "▏",
         },
-        filetype_exclude = {
-          "help",
-          "packer",
-          "NvimTree",
-          "Trouble",
-          "TelescopePrompt",
-          "TelescopeResults",
-          "startify",
-          "dashboard",
-          "lazy",
-          "neogitstatus",
-          "Outline",
-          "spectre_panel",
-          "toggleterm",
-          "qf",
+        scope = {
+          enabled = true,
+          show_start = false,
+          show_end = false,
         },
-        buftype_exclude = {
-          "terminal",
-          "nofile",
-        },
-        -- Version 3 specific options
-        indent_blankline_use_treesitter = true,
-        indent_blankline_show_current_context = true,
-        indent_blankline_context_patterns = {
-          "class",
-          "return",
-          "function",
-          "method",
-          "^if",
-          "^while",
-          "jsx_element",
-          "^for",
-          "^object",
-          "^table",
-          "block",
-          "arguments",
-          "if_statement",
-          "else_clause",
-          "jsx_element",
-          "jsx_self_closing_element",
-          "try_statement",
-          "catch_clause",
-          "import_statement",
-          "operation_type",
-        },
-        indent_blankline_char_highlight_list = {
-          "IndentBlanklineIndent1",
-          "IndentBlanklineIndent2",
-          "IndentBlanklineIndent3",
-          "IndentBlanklineIndent4",
-          "IndentBlanklineIndent5",
-          "IndentBlanklineIndent6",
+        exclude = {
+          filetypes = {
+            "help",
+            "alpha",
+            "dashboard",
+            "neo-tree",
+            "Trouble",
+            "lazy",
+            "mason",
+            "notify",
+            "toggleterm",
+            "lazyterm",
+          },
         },
       })
     end,
