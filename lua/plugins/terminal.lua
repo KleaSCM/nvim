@@ -4,26 +4,27 @@ return {
     version = "*",
     config = function()
       require("toggleterm").setup({
-        size = 20,
-        open_mapping = [[<c-\>]],
-        hide_numbers = true,
-        shade_filetypes = {},
-        shade_terminals = true,
-        shading_factor = 2,
-        start_in_insert = true,
-        insert_mappings = true,
-        persist_size = true,
-        direction = "float",
-        close_on_exit = true,
-        shell = vim.o.shell,
+        size = function(term)
+          if term.direction == "horizontal" then
+            return 15
+          elseif term.direction == "vertical" then
+            return vim.o.columns * 0.4
+          end
+        end,
+        open_mapping = [[<leader>t]],
+        direction = "vertical",
         float_opts = {
           border = "curved",
-          winblend = 0,
-          highlights = {
-            border = "Normal",
-            background = "Normal",
-          },
+          width = function() return math.floor(vim.o.columns * 0.4) end,
+          height = function() return vim.o.lines end,
         },
+        on_open = function(term)
+          vim.cmd("wincmd L")
+          vim.cmd("wincmd =")
+        end,
+        on_close = function(term)
+          vim.cmd("wincmd =")
+        end,
       })
 
       function _G.set_terminal_keymaps()
@@ -42,35 +43,33 @@ return {
       local Terminal = require("toggleterm.terminal").Terminal
       local lazygit = Terminal:new({
         cmd = "lazygit",
-        hidden = true,
+        dir = "git_dir",
         direction = "float",
         float_opts = {
-          border = "none",
-          width = 100000,
-          height = 100000,
+          border = "double",
         },
         on_open = function(term)
           vim.cmd("startinsert!")
-          vim.api.nvim_buf_set_keymap(
-            term.bufnr,
-            "n",
-            "q",
-            "<cmd>close<CR>",
-            { noremap = true, silent = true }
-          )
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
         end,
       })
 
-      function _LAZYGIT_TOGGLE()
-        lazygit:toggle()
+      vim.keymap.set("n", "<leader>t", "<cmd>ToggleTerm<CR>", { desc = "Toggle terminal" })
+      vim.keymap.set("n", "<leader>g", function() lazygit:toggle() end, { desc = "Toggle lazygit" })
+
+      local function resize_terminal(direction)
+        local term = require("toggleterm.terminal").get_all()[1]
+        if term and term:is_open() then
+          if direction == "left" then
+            vim.cmd("vertical resize -5")
+          elseif direction == "right" then
+            vim.cmd("vertical resize +5")
+          end
+        end
       end
 
-      vim.api.nvim_set_keymap(
-        "n",
-        "<leader>gg",
-        "<cmd>lua _LAZYGIT_TOGGLE()<CR>",
-        { noremap = true, silent = true }
-      )
+      vim.keymap.set("n", "<leader><Left>", function() resize_terminal("left") end, { desc = "Decrease terminal width" })
+      vim.keymap.set("n", "<leader><Right>", function() resize_terminal("right") end, { desc = "Increase terminal width" })
     end,
   },
 } 
