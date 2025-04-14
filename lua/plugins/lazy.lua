@@ -8,6 +8,17 @@ return {
       require("lazy").setup({
         spec = {
           { import = "plugins" },
+          {
+            dir = "~/.config/nvim",
+            name = "scripts",
+            config = function()
+              require("plugins.scripts").setup()
+            end,
+            event = "VimEnter",
+            priority = 1000,
+            dependencies = { "goolord/alpha-nvim" },
+            enabled = true,
+          },
         },
         defaults = {
           lazy = false,
