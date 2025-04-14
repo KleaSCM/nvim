@@ -6,6 +6,7 @@ return {
     config = function()
       local telescope = require("telescope")
       local actions = require("telescope.actions")
+      local previewers = require("telescope.previewers")
 
       telescope.setup({
         defaults = {
@@ -16,35 +17,13 @@ return {
               ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
             },
           },
-          file_previewer = {
-            -- Exclude binary files from preview
-            previewer = function(opts)
-              local previewers = require("telescope.previewers")
-              local previewer = previewers.new_buffer_previewer({
-                title = "File Preview",
-                get_buffer_by_name = function(_, entry)
-                  return entry.value
-                end,
-                define_preview = function(self, entry, status)
-                  local p = vim.loop.fs_stat(entry.value)
-                  if p and p.type == "file" then
-                    local filetype = vim.filetype.match({ filename = entry.value })
-                    if filetype == "binary" then
-                      vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, {
-                        "Binary file preview not available",
-                        "File: " .. entry.value,
-                      })
-                      return
-                    end
-                  end
-                  return previewers.buffer_previewer_maker(entry.value, self.state.bufnr, {
-                    bufname = self.state.bufname,
-                  })
-                end,
-              })
-              return previewer
-            end,
+          preview = {
+            filesize_limit = 1, -- MB
+            timeout = 200,
           },
+          file_previewer = previewers.vim_buffer_cat.new,
+          grep_previewer = previewers.vim_buffer_vimgrep.new,
+          qflist_previewer = previewers.vim_buffer_qflist.new,
         },
         pickers = {
           find_files = {

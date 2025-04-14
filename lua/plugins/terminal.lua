@@ -58,18 +58,56 @@ return {
       vim.keymap.set("n", "<leader>g", function() lazygit:toggle() end, { desc = "Toggle lazygit" })
 
       local function resize_terminal(direction)
-        local term = require("toggleterm.terminal").get_all()[1]
-        if term and term:is_open() then
-          if direction == "left" then
-            vim.cmd("vertical resize -5")
-          elseif direction == "right" then
-            vim.cmd("vertical resize +5")
+        local terms = require("toggleterm.terminal").get_all()
+        for _, term in ipairs(terms) do
+          if term:is_open() then
+            if direction == "left" then
+              vim.cmd("vertical resize -5")
+            elseif direction == "right" then
+              vim.cmd("vertical resize +5")
+            end
           end
         end
       end
 
       vim.keymap.set("n", "<leader><Left>", function() resize_terminal("left") end, { desc = "Decrease terminal width" })
       vim.keymap.set("n", "<leader><Right>", function() resize_terminal("right") end, { desc = "Increase terminal width" })
+
+      local main_term = Terminal:new({
+        direction = "vertical",
+        on_open = function(term)
+          vim.cmd("wincmd L")
+          vim.cmd("wincmd =")
+        end,
+      })
+
+      local second_term = Terminal:new({
+        direction = "vertical",
+        on_open = function(term)
+          vim.cmd("wincmd L")
+          vim.cmd("wincmd =")
+        end,
+      })
+
+      local third_term = Terminal:new({
+        direction = "vertical",
+        on_open = function(term)
+          vim.cmd("wincmd L")
+          vim.cmd("wincmd =")
+        end,
+      })
+
+      vim.keymap.set("n", "<leader>2", function() second_term:toggle() end, { desc = "Toggle second terminal" })
+      vim.keymap.set("n", "<leader>3", function() third_term:toggle() end, { desc = "Toggle third terminal" })
+
+      vim.keymap.set("n", "<leader>tc", function()
+        local terms = require("toggleterm.terminal").get_all()
+        for _, term in ipairs(terms) do
+          if term:is_open() then
+            term:close()
+          end
+        end
+      end, { desc = "Close all terminals" })
     end,
   },
 } 
