@@ -104,6 +104,7 @@ Plus:
 Custom alpha-nvim dashboard with ASCII banner,
 
 buttons for file explorer, recent files, config, keymaps, and more. Pops up on empty start and when all buffers close.
+![Screenshot_20250414_095220](https://github.com/user-attachments/assets/7d2edbdb-4108-4262-81ca-321c29598968)
 
 ---
 # 🐛 Debugging (DAP)
@@ -127,6 +128,9 @@ Diagnostics piped to trouble.nvim
 
 - <leader>xx to toggle
 - <leader>l to manually trigger linting
+![Screenshot_20250414_095453](https://github.com/user-attachments/assets/a19d6252-80de-4265-9929-bd3d2712efc8)
+![Screenshot_20250415_084621](https://github.com/user-attachments/assets/6eae7204-9b0c-4621-8f44-3b001bd86687)
+
 ---
 # 📸 Script Runner
 ### Custom script launcher in scripts.lua
