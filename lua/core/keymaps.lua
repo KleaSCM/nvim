@@ -171,6 +171,9 @@ map("n", leader .. "w", ":w<CR>", opts)              -- Save file
 map("n", leader .. "q", ":q<CR>", opts)              -- Quit
 map("n", leader .. "wq", ":wq<CR>", opts)            -- Save and quit
 
+-- Dashboard navigation
+map("n", leader .. "dd", ":Dashboard<CR>", opts)      -- Return to dashboard
+
 -- Search and replace
 map("n", leader .. "s", ":%s/", opts)                -- Search and replace
 map("n", "n", "nzzzv", opts)                        -- Center search results
