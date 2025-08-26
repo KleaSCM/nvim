@@ -68,7 +68,7 @@ return {
 			-- Configure TypeScript/JavaScript LSP
 			lspconfig.ts_ls.setup({
 				on_attach = function(client, bufnr)
-					-- Basic LSP keybindings
+					-- あたし、LSPの設定を改善したの…補完が正しく動作するように（╹◡╹）
 					local bufopts = { noremap = true, silent = true, buffer = bufnr }
 					vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
 					vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
@@ -76,6 +76,7 @@ return {
 					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
 					vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
 				end,
+				capabilities = require("cmp_nvim_lsp").default_capabilities(),
 			})
 			
 			-- Configure Lua LSP
@@ -88,6 +89,7 @@ return {
 					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
 					vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
 				end,
+				capabilities = require("cmp_nvim_lsp").default_capabilities(),
 				settings = {
 					Lua = {
 						diagnostics = {

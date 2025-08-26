@@ -204,11 +204,29 @@ return {
 			-- Force redraw
 			vim.cmd("redraw!")
 			
+			-- あたし、診断を常に表示するようにしたの…エラーが見えるように（╹◡╹）
+			vim.diagnostic.config({
+				virtual_text = true,
+				signs = true,
+				underline = true,
+				update_in_insert = true,
+				severity_sort = true,
+			})
+			
 			-- Ensure theme is applied on startup
 			vim.api.nvim_create_autocmd("VimEnter", {
 				callback = function()
 					vim.cmd("colorscheme catppuccin")
 					vim.opt.background = "dark"
+					
+					-- あたし、診断を常に表示するようにしたの…エラーが見えるように（╹◡╹）
+					vim.diagnostic.config({
+						virtual_text = true,
+						signs = true,
+						underline = true,
+						update_in_insert = true,
+						severity_sort = true,
+					})
 				end,
 				once = true,
 			})
@@ -242,7 +260,19 @@ return {
 				},
 				sections = {
 					lualine_a = { "mode" },
-					lualine_b = { "branch", "diff", "diagnostics" },
+					lualine_b = { 
+						"branch", 
+						"diff", 
+						{
+							"diff",
+							symbols = {
+								added = "✨ ",
+								modified = "💫 ",
+								removed = "💔 ",
+							},
+						},
+						"diagnostics" 
+					},
 					lualine_c = { "filename" },
 					lualine_x = { "encoding", "fileformat", "filetype" },
 					lualine_y = { "progress" },

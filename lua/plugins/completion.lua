@@ -15,6 +15,7 @@ return {
 	{
 		"hrsh7th/nvim-cmp",
 		event = "InsertEnter",
+		priority = 100,
 		dependencies = {
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
@@ -33,10 +34,15 @@ return {
 			require("luasnip.loaders.from_vscode").lazy_load()
 			
 			cmp.setup({
+				-- あたし、補完の設定を改善したの…LSPメニューが表示されるように（╹◡╹）
 				snippet = {
 					expand = function(args)
 						luasnip.lsp_expand(args.body)
 					end,
+				},
+				completion = {
+					completeopt = "menu,menuone,noinsert",
+					keyword_length = 1,
 				},
 				window = {
 					completion = cmp.config.window.bordered(),
@@ -68,10 +74,10 @@ return {
 					end, { "i", "s" }),
 				}),
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
-					{ name = "buffer" },
-					{ name = "path" },
+					{ name = "nvim_lsp", priority = 1000 },
+					{ name = "luasnip", priority = 750 },
+					{ name = "buffer", priority = 500 },
+					{ name = "path", priority = 250 },
 				}),
 				formatting = {
 					fields = { "kind", "abbr", "menu" },

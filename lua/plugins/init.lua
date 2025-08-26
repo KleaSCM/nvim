@@ -23,8 +23,11 @@ return {
 	-- Editor plugins (file explorer, terminal, fuzzy finder, editing tools)
 	{ import = "plugins.editor" },
 
-	-- LSP plugins (Mason, language servers, completion)
+	-- LSP plugins (Mason, language servers)
 	{ import = "plugins.lsp" },
+
+	-- Completion plugins (nvim-cmp, LuaSnip, snippets)
+	{ import = "plugins.completion" },
 
 	-- Tools plugins (git integration, utilities)
 	{ import = "plugins.tools" },

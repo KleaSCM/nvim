@@ -95,9 +95,22 @@ end
 -- Set colorscheme
 opt.background = "dark"
 
+-- Diagnostic configuration - always show errors!
+opt.updatetime = 300               -- Faster diagnostic updates
+opt.signcolumn = "yes"             -- Always show sign column for diagnostics
+
 -- Performance optimizations
 opt.hidden = true                  -- Allow hidden buffers
 opt.history = 1000                 -- Command history
+
+-- Global diagnostic settings - always show errors!
+vim.diagnostic.config({
+	virtual_text = true,           -- Show error text inline
+	signs = true,                  -- Show error signs in gutter
+	underline = true,              -- Underline errors
+	update_in_insert = true,       -- Update diagnostics in insert mode
+	severity_sort = true,          -- Sort by severity
+})
 opt.wildmenu = true                -- Command line completion
 opt.wildmode = "list:longest"      -- Command line completion mode
 opt.wildignore = "*.o,*.obj,*.pyc,*.so,*.dll,*.dylib,*.exe,*.out,*.app"

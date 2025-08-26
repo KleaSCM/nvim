@@ -96,6 +96,22 @@ api.nvim_create_autocmd("InsertEnter", {
 	command = "set nocursorline",
 })
 
+-- Always show diagnostics in all modes
+api.nvim_create_autocmd("ModeChanged", {
+	group = group,
+	pattern = "*",
+	callback = function()
+		-- あたし、診断を常に表示するようにしたの…エラーが見えるように（╹◡╹）
+		vim.diagnostic.config({
+			virtual_text = true,
+			signs = true,
+			underline = true,
+			update_in_insert = true,
+			severity_sort = true,
+		})
+	end,
+})
+
 api.nvim_create_autocmd("InsertLeave", {
 	group = group,
 	pattern = "*",
