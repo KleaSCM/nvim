@@ -1,0 +1,38 @@
+# Neovim Configuration Project
+# Ignore common Neovim and development files
+
+# Neovim specific
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Temporary files
+*.tmp
+*.temp
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*.backup
+
+# Plugin manager lock files
+packer_compiled.lua
+lazy-lock.json 

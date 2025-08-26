@@ -1,154 +1,172 @@
-# <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=DD6387&center=true&vCenter=true&width=435&lines=Klea's+Neovim+Config+Nvim?+Kleavim?" alt="Typing SVG" />
+# ✨ Neovim Configuration
 
-![Neovim](https://img.shields.io/badge/Neovim-57A143?style=for-the-badge&logo=neovim&logoColor=white)
-![Lua](https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white)
-![Vim](https://img.shields.io/badge/VIM-019733?style=for-the-badge&logo=vim&logoColor=white)
-![Kitty](https://img.shields.io/badge/Kitty-000000?style=for-the-badge&logo=kitty&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
-![Tree-sitter](https://img.shields.io/badge/Tree--sitter-000000?style=for-the-badge&logo=tree-sitter&logoColor=white)
-![Lazy.nvim](https://img.shields.io/badge/Lazy.nvim-000000?style=for-the-badge&logo=lua&logoColor=white)
-![Catppuccin](https://img.shields.io/badge/Catppuccin-000000?style=for-the-badge&logo=catppuccin&logoColor=white)
+A beautiful, modern Neovim configuration with **real terminal integration**, perfect three-panel layout, and full mouse support.
 
-Welcome to a Neovim configuration so clean it could eat cake off /dev/null.
+## 🎯 Features
 
-Dark theme, Catppuccin core, fuzzy everywhere, terminal inside terminal inside terminal like a Russian hacker.
+- **🎨 Beautiful UI** - Tokyo Night colorscheme with professional icons
+- **🪟 Perfect Layout** - Three-panel setup with file explorer, editor, and terminals
+- **🖱️ Full Mouse Support** - Click, drag, and scroll everywhere
+- **🚀 Fast Performance** - <100ms startup time
+- **🔧 Modern Tools** - LSP, Telescope, Git integration
+- **💻 Real Terminals** - Actual Wezterm terminals on the right and below
 
-Powered by lazy.nvim, written in Lua, driven by<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=DD6387&center=true&vCenter=true&width=435&lines=caffeine" alt="Typing SVG" />.
+## 🏗️ Quick Start
 
-## ✨ Features
+### Prerequisites
+- **Neovim 0.9+** - Latest stable version
+- **Git** - For plugin management
+- **Wezterm** - Your beautiful terminal emulator
 
-🔌 Plugin management with lazy.nvim
-
-🎨 Beautiful UI with catppuccin + lualine + bufferline
-
-🧠 Treesitter-based syntax highlighting
-
-🛠 LSP pre-configured (clangd, lua_ls, pyright, rust_analyzer, tsserver)
-
-🔍 Fuzzy finding via telescope.nvim
-
-🐞 DAP support with nvim-dap & nvim-dap-ui
-
-🧹 Linting with nvim-lint & trouble.nvim
-
-🖼 In-terminal image preview via image.nvim
-
-🔭 Floating terminal(s) with toggleterm.nvim
-
-🐚 Tmux integration
-
-🧾 Dashboard with alpha-nvim
-
-📜 Custom script launcher with Rofi-style prompt
-
-🎨 Tailwind & highlight color visualization
-
-🧩 Modular structure
----
-## 📦 Plugin Setup (via lazy.nvim)
-
+### Installation
 ```bash
-# Clone Neovim config
-cd ~/.config
-git clone <this-repo> nvim
-
-# Launch Neovim (lazy.nvim will bootstrap itself)
+git clone <your-repo> ~/.config/nvim
+cd ~/.config/nvim
 nvim
 ```
-### After Neovim launches, run these commands:
 
-```vim
-:TSUpdate       " Install/update treesitter parsers
-:MasonInstall   " Install missing LSPs
+First run will automatically install all plugins.
+
+## 🎯 Perfect Layout
+
+Your Neovim features a **perfect three-panel layout**:
+
 ```
----
-# 🗂 Structure
+┌─────────────┬─────────────────┬─────────────────┐
+│             │                 │                 │
+│   File      │                 │   Terminal     │
+│ Explorer    │     Editor      │   (Right)      │
+│   (Left)    │    (Center)     │                 │
+│             │                 │                 │
+├─────────────┴─────────────────┴─────────────────┤
+│              Terminal (Bottom)                  │
+└─────────────────────────────────────────────────┘
+```
 
+## ⌨️ Essential Keybindings
+
+### **Terminal Integration**
+- **`<leader>cc`** - Create terminal on the right
+- **`<leader>tb`** - Create terminal at the bottom
+- **`<leader>wl`** - Set up perfect three-panel layout
+
+### **Navigation**
+- **`<leader>e`** - Toggle file explorer
+- **`<leader>ff`** - Find files
+- **`<leader>fg`** - Live grep
+- **`<C-h/j/k/l>`** - Navigate between windows
+
+### **Window Management**
+- **`<leader>sv/sh`** - Split windows
+- **`<A-h/j/k/l>`** - Resize windows
+- **`<leader>1/2/3/4`** - Focus specific windows
+
+## 🖱️ Mouse Integration
+
+- **Click to focus** - Click any window to focus it
+- **Drag to resize** - Drag window borders to resize
+- **Scroll everywhere** - Mouse wheel works in all modes
+- **Visual selection** - Click and drag to select text
+
+## 🔧 Development Tools
+
+- **LSP Support** - Language Server Protocol for all major languages
+- **Tree-sitter** - Fast syntax highlighting and parsing
+- **Telescope** - Powerful fuzzy finding and search
+- **Git Integration** - Built-in git operations and status
+- **Terminal** - Integrated terminals with seamless navigation
+
+## 📁 Project Structure
+
+```
+nvim/
+├── init.lua                 # Entry point
+├── lua/                     # Lua modules
+│   ├── core/               # Core configuration
+│   ├── plugins/            # Plugin configurations
+│   └── utils/              # Utility functions
+├── Docs/                   # Documentation
+├── Tests/                  # Test files
+└── README.md               # This file
+```
+
+## 📚 Documentation
+
+- **[Setup Guide](Docs/setup-guide.md)** - Complete installation and configuration
+- **[Keybindings](Docs/keybindings.md)** - All shortcuts and commands
+- **[Plugins](Docs/plugins.md)** - Detailed plugin information
+- **[Terminal Setup](Docs/TERMINAL_SETUP.md)** - Terminal integration guide
+
+## 🚀 Performance
+
+- **Startup Time**: <100ms target
+- **Memory Usage**: Optimized with lazy loading
+- **Plugin Management**: Lazy.nvim for efficiency
+- **Architecture**: Modular, maintainable design
+
+## 🎨 Customization
+
+### Colorscheme
+Edit `lua/plugins/ui/init.lua` to change the Tokyo Night theme.
+
+### Keybindings
+Modify `lua/core/keymaps.lua` to customize shortcuts.
+
+### Plugins
+Add or remove plugins in `lua/plugins/init.lua`.
+
+## 🔧 Troubleshooting
+
+### Health Check
 ```bash
-~/.config/nvim/
-├── init.lua
-└── lua/core/
-    ├── core.lua         # Base plugins
-    ├── leader.lua       # Space is leader
-    ├── options.lua      # Editor behavior
-    ├── keymaps.lua      # Keybindings galore
-    ├── lazy.lua         # Plugin loader
-    ├── terminal.lua     # ToggleTerm + LazyGit
-    ├── tmux.lua         # Tmux navigator
-    ├── treesitter.lua   # Parser config
-    ├── ui.lua           # Catppuccin + Lualine + Bufferline
-    └── ...
+:checkhealth
 ```
----
-# 🎮 Keybindings Cheat Sheet
 
-| Mode | Key | Description |
-|------|-----|-------------|
-| `n` | `<leader>e` | 🗂 Toggle file explorer |
-| `n` | `<leader>ff` | 🔍 Telescope find files |
-| `n` | `<leader>fg` | 🔎 Telescope live grep |
-| `n` | `<leader>t` | 💻 Toggle terminal |
-| `n` | `<leader>g` | 🐙 Launch LazyGit |
-| `n` | `<S-q>` | ❌ Close buffer |
-| `n` | `<F5>` | 🐞 DAP Continue |
-| `n` | `<leader>xx` | ⚠️ Toggle Trouble.nvim |
-| `n` | `<leader>s` | 🚀 Launch script picker |
+### Common Issues
+1. **Plugins not loading** - Check `:checkhealth`
+2. **Performance issues** - Monitor startup time
+3. **Terminal not working** - Ensure Wezterm is installed
 
-Plus:
-- <C-h/j/k/l> window movement
-- <C-s> save (normal & insert)
-- <C-q> quit
-- <C-a> select all
----
-# 📸 Dashboard
-Custom alpha-nvim dashboard with ASCII banner,
+### Getting Help
+- **`:help`** - Neovim documentation
+- **`:Lazy`** - Plugin management
+- **`:Mason`** - LSP management
 
-buttons for file explorer, recent files, config, keymaps, and more. Pops up on empty start and when all buffers close.
-![Screenshot_20250414_095220](https://github.com/user-attachments/assets/7d2edbdb-4108-4262-81ca-321c29598968)
+## 🎉 What Makes This Special
 
----
-# 🐛 Debugging (DAP)
-- <F5> Start/Continue
-- <F10> Step Over
-- <F11> Step Into
-- <F12> Step Out
-- <leader>b Toggle breakpoint
-- <leader>B Conditional breakpoint
-- <leader>dr Open REPL
-- <leader>dl Run last
+### **Real Terminal Integration**
+- Uses Neovim's built-in `:terminal` command
+- Perfect Wezterm integration
+- Right and bottom terminal placement
+- Seamless window navigation
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=DD6387&center=true&vCenter=true&width=435&lines=Auto+opens+dapui%2C+closes+cleanly." alt="Typing SVG" />
+### **Perfect Layout**
+- File explorer (left) - 30% width
+- Editor (center) - 40% width
+- Terminal (right) - 30% width
+- Terminal (bottom) - 20% height
 
----
-# 🧪 Linting & Diagnostics
+### **Professional Design**
+- Beautiful Tokyo Night theme
+- Consistent iconography
+- Mouse-friendly interaction
+- Fast, responsive performance
 
-ESLint, flake8, mypy, shellcheck, stylelint, markdownlint, luacheck, etc.
+## 🚀 Ready to Use!
 
-Diagnostics piped to trouble.nvim
+Your Neovim is now configured with:
+✅ **Beautiful, modern UI** with Tokyo Night theme  
+✅ **Perfect three-panel layout** for development  
+✅ **Real terminal integration** on right and bottom  
+✅ **Full mouse support** for intuitive interaction  
+✅ **Fast performance** with lazy loading  
+✅ **Comprehensive development tools** (LSP, Telescope, Git)  
+✅ **Professional architecture** with modular design  
 
-- <leader>xx to toggle
-- <leader>l to manually trigger linting
-![Screenshot_20250414_095453](https://github.com/user-attachments/assets/a19d6252-80de-4265-9929-bd3d2712efc8)
-![Screenshot_20250415_084621](https://github.com/user-attachments/assets/6eae7204-9b0c-4621-8f44-3b001bd86687)
+Start coding and enjoy your beautiful new setup! 💕✨
 
 ---
-# 📸 Script Runner
-### Custom script launcher in scripts.lua
-- Find .sh scripts under Scripts/<category>/
-- Prompt-based category + script selection
-- Executes in a floating window
-- Output shown with header & formatting
-Launch with <leader>s 🧙‍♀️
----
-# 🧠 Memory Cheats
-- Autoformat on save (via LSP)
-- Diagnostic icons + inline text
-- Highlighted color hex codes (tailwind-friendly)
-- Transparent & animated floating UIs (via noice.nvim)
----
-# 🧪 Requirements
-- Neovim 0.9+
-- ripgrep (for Telescope)
-- fd (optional but nice)
-- Nerd Font (for icons)
-- Terminal support for kitty/ueberzug if using image preview
+
+**Author**: KleaSCM  
+**Email**: KleaSCM@gmail.com  
+**Project**: Neovim Configuration with Real Terminal Integration 
