@@ -695,4 +695,5 @@ return {
 	-- Import additional tool modules
 	{ import = "plugins.tools.task-management" },
 	{ import = "plugins.tools.file-management" },
+	{ import = "plugins.tools.media-preview" },
 } 

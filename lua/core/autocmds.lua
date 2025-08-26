@@ -277,16 +277,19 @@ api.nvim_create_autocmd("TermOpen", {
 		-- Give it a unique name if it doesn't have one
 		local buf_name = vim.api.nvim_buf_get_name(0)
 		if buf_name == "" or buf_name:match("^term://") then
-			local win_id = vim.api.nvim_get_current_win()
-			local win_pos = vim.api.nvim_win_get_position(win_id)
-			
-			-- Determine if it's right or bottom terminal based on position
-			if win_pos[2] > 50 then  -- Right side
-				vim.cmd("file RightTerminal")
-			elseif win_pos[1] > 20 then  -- Bottom
-				vim.cmd("file BottomTerminal")
-			else
-				vim.cmd("file Terminal")
+			-- Check if this is a Telescope terminal preview
+			local buf_type = vim.bo.buftype
+			if buf_type == "terminal" then
+				-- Generate a unique name with timestamp to avoid conflicts
+				local timestamp = os.time()
+				local unique_name = "Terminal_" .. timestamp .. "_" .. math.random(1000, 9999)
+				
+				-- Use pcall to safely rename without errors
+				local ok, _ = pcall(vim.cmd, "file " .. unique_name)
+				if not ok then
+					-- If renaming fails, just use a simple name
+					pcall(vim.cmd, "file Terminal_" .. timestamp)
+				end
 			end
 		end
 	end,
@@ -310,6 +313,37 @@ api.nvim_create_autocmd("TermClose", {
 	end,
 })
 
+-- Handle Telescope terminal previews gracefully
+api.nvim_create_autocmd("TermOpen", {
+	group = group,
+	pattern = "*",
+	callback = function()
+		-- あたし、Telescopeのターミナルプレビューを美しくしたの…エラーが出ちゃうから（╹◡╹）
+		local buf = vim.api.nvim_get_current_buf()
+		local buf_name = vim.api.nvim_buf_get_name(buf)
+		
+		-- Check if this is a Telescope terminal preview
+		if buf_name:match("^Telescope") or buf_name:match("^term://.*telescope") then
+			-- Set Telescope terminal options
+			vim.bo.buftype = "terminal"
+			vim.bo.bufhidden = "hide"
+			vim.bo.swapfile = false
+			vim.bo.filetype = "terminal"
+			
+			-- Give it a unique name to avoid conflicts
+			local timestamp = os.time()
+			local unique_name = "TelescopeTerminal_" .. timestamp .. "_" .. math.random(1000, 9999)
+			
+			-- Use pcall to safely rename without errors
+			local ok, _ = pcall(vim.cmd, "file " .. unique_name)
+			if not ok then
+				-- If renaming fails, just use a simple name
+				pcall(vim.cmd, "file TelescopeTerminal_" .. timestamp)
+			end
+		end
+	end,
+})
+
 -- Auto-clean up temporary buffers (safely!)
 api.nvim_create_autocmd("BufHidden", {
 	group = group,
@@ -327,7 +361,9 @@ api.nvim_create_autocmd("BufHidden", {
 		   buf_name:match("^Neo%-tree") or
 		   buf_name:match("^Trouble") or
 		   buf_name:match("^Mason") or
-		   buf_name:match("^Lazy") then
+		   buf_name:match("^Lazy") or
+		   buf_name:match("^Terminal_") or
+		   buf_name:match("^term://") then
 			return
 		end
 		

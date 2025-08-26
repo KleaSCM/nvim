@@ -173,6 +173,7 @@ return {
 		end,
 			},
 			"nvim-telescope/telescope-ui-select.nvim",
+			"nvim-telescope/telescope-media-files.nvim",
 		},
 		config = function()
 			require("telescope").setup({
@@ -323,6 +324,8 @@ return {
 			else
 				vim.notify("⚠️ UI Select extension failed to load", vim.log.levels.WARN)
 			end
+			
+			-- Media files extension is now handled in tools/media-preview.lua
 		end,
 	},
 

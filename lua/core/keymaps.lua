@@ -133,12 +133,15 @@ map("t", "<C-k>", "<C-\\><C-n><C-w>k", opts)       -- Navigate up from terminal
 map("t", "<C-l>", "<C-\\><C-n><C-w>l", opts)       -- Navigate right from terminal
 map("t", "<Esc>", "<C-\\><C-n>", opts)              -- Exit terminal mode
 
--- Telescope integration
-map("n", leader .. "ff", ":Telescope find_files<CR>", opts) -- Find files
-map("n", leader .. "fg", ":Telescope live_grep<CR>", opts) -- Live grep
-map("n", leader .. "fb", ":Telescope buffers<CR>", opts) -- Find buffers
-map("n", leader .. "fh", ":Telescope help_tags<CR>", opts) -- Help tags
-map("n", leader .. "fr", ":Telescope oldfiles<CR>", opts) -- Recent files
+	-- Telescope integration
+	map("n", leader .. "ff", ":Telescope find_files<CR>", opts) -- Find files
+	map("n", leader .. "fg", ":Telescope live_grep<CR>", opts) -- Live grep
+	map("n", leader .. "fb", ":Telescope buffers<CR>", opts) -- Find buffers
+	map("n", leader .. "fh", ":Telescope help_tags<CR>", opts) -- Help tags
+	map("n", leader .. "fr", ":Telescope oldfiles<CR>", opts) -- Recent files
+	map("n", leader .. "fm", ":Telescope media_files<CR>", opts) -- Find media files
+	map("n", leader .. "fi", ":!feh <cfile><CR>", opts) -- Open image with feh
+	map("n", leader .. "fv", ":!mpv <cfile><CR>", opts) -- Open video with mpv
 
 -- Mason management
 map("n", leader .. "mm", ":Mason<CR>", opts)         -- Open Mason
