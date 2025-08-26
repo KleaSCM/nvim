@@ -273,7 +273,10 @@ return {
 						},
 						"diagnostics" 
 					},
-					lualine_c = { "filename" },
+					lualine_c = { 
+						"filename",
+						-- TODO: Add enhanced git info display once module is properly configured
+					},
 					lualine_x = { "encoding", "fileformat", "filetype" },
 					lualine_y = { "progress" },
 					lualine_z = { "location" },

@@ -194,92 +194,7 @@ return {
 		end,
 	},
 
-	-- Interactive Git staging (git add/remove interface)
-	{
-		"lewis6991/gitsigns.nvim",
-		config = function()
-			require("gitsigns").setup({
-				-- あたし、Git stagingを美しくしたの…ファイルの追加・削除が見やすくなるように（╹◡╹）
-				signs = {
-					add = { text = "✨", hl = "GitSignsAdd" },
-					change = { text = "💫", hl = "GitSignsChange" },
-					delete = { text = "💔", hl = "GitSignsDelete" },
-					topdelete = { text = "💔", hl = "GitSignsDelete" },
-					changedelete = { text = "💫", hl = "GitSignsChange" },
-					untracked = { text = "💭", hl = "GitSignsAdd" },
-				},
-				signcolumn = true,
-				numhl = true,
-				linehl = true,
-				word_diff = true,
-				watch_gitdir = {
-					interval = 1000,
-					follow_files = true,
-				},
-				attach_to_untracked = true,
-				current_line_blame = true,
-				current_line_blame_opts = {
-					virt_text = true,
-					virt_text_pos = "eol",
-					delay = 1000,
-					ignore_whitespace = false,
-				},
-				current_line_blame_formatter = "💕 <author> • <author_time:%Y-%m-%d %H:%M> • <summary>",
-				sign_priority = 6,
-				update_debounce = 100,
-				status_formatter = function(status)
-					-- Show git status with emojis
-					local added = status.added and ("✨ " .. status.added) or ""
-					local changed = status.changed and ("💫 " .. status.changed) or ""
-					local removed = status.removed and ("💔 " .. status.removed) or ""
-					return string.format("%s %s %s", added, changed, removed)
-				end,
-				max_file_length = 40000,
-				preview_config = {
-					border = "single",
-					style = "minimal",
-					relative = "cursor",
-					row = 0,
-					col = 1,
-				},
-				-- Enhanced git features
-				on_attach = function(bufnr)
-					local gs = package.loaded.gitsigns
-					
-					local function map(mode, l, r, opts)
-						opts = opts or {}
-						opts.buffer = bufnr
-						vim.keymap.set(mode, l, r, opts)
-					end
-					
-					-- Git navigation
-					map("n", "]c", function()
-						if vim.wo.diff then return "]c" end
-						vim.schedule(function() gs.next_hunk() end)
-						return "<Ignore>"
-					end, { expr = true })
-					
-					map("n", "[c", function()
-						if vim.wo.diff then return "[c" end
-						vim.schedule(function() gs.prev_hunk() end)
-						return "<Ignore>"
-					end, { expr = true })
-					
-					-- Git actions
-					map("n", "<leader>hs", gs.stage_hunk)
-					map("n", "<leader>hr", gs.reset_hunk)
-					map("n", "<leader>hS", gs.stage_buffer)
-					map("n", "<leader>hu", gs.undo_stage_hunk)
-					map("n", "<leader>hR", gs.reset_buffer)
-					map("n", "<leader>hp", gs.preview_hunk)
-					map("n", "<leader>hb", function() gs.blame_line{full=true} end)
-					map("n", "<leader>tb", gs.toggle_current_line_blame)
-					map("n", "<leader>hd", gs.diffthis)
-					map("n", "<leader>hD", function() gs.diffthis("~") end)
-				end,
-			})
-		end,
-	},
+	-- Git staging is already configured above
 
 	-- Git conflict resolution and advanced features
 	{
@@ -696,4 +611,8 @@ return {
 	{ import = "plugins.tools.task-management" },
 	{ import = "plugins.tools.file-management" },
 	{ import = "plugins.tools.media-preview" },
+	{ import = "plugins.tools.session-management" },
+	{ import = "plugins.tools.advanced-git" },
+	{ import = "plugins.tools.enhanced-lsp" },
+	{ import = "plugins.tools.beautiful-ui" },
 } 
