@@ -1,76 +1,44 @@
 --[[
- * Session management and project memory system.
+ * Session and project management module.
  * 
- * Remembers your workspace, tabs, splits, and files.
- * Never lose your work again!
+ * Provides session persistence, project management, and dashboard configuration.
  * 
  * Author: KleaSCM
  * Email: KleaSCM@gmail.com
  * File: tools/session-management.lua
- * Description: Session management and project memory
+ * Description: Session and project management with beautiful dashboard
 --]]
 
 return {
-	-- Session management - Remember everything!
+	-- Session persistence
 	{
 		"folke/persistence.nvim",
 		event = "BufReadPre",
-		opts = {
-			-- あたし、セッション管理を美しくしたの…何も失わないように（╹◡╹）
-			dir = vim.fn.expand(vim.fn.stdpath("state") .. "/sessions/"),
-			options = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp" },
-		},
-		keys = {
-			-- Save and restore sessions
-			{ "<leader>qs", function() require("persistence").load() end, desc = "💾 Restore Session" },
-			{ "<leader>ql", function() require("persistence").load({ last = true }) end, desc = "🔄 Restore Last Session" },
-			{ "<leader>qd", function() require("persistence").stop() end, desc = "⏹️ Don't Save Session" },
-		},
+		config = function()
+			-- あたし、セッション管理を美しくしたの…プロジェクトが簡単に保存されるように（╹◡╹）
+			require("persistence").setup({
+				dir = vim.fn.expand(vim.fn.stdpath("state") .. "/sessions/"),
+				options = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" },
+			})
+		end,
 	},
 
-	-- Project management and workspace
+	-- Project management
 	{
 		"ahmedkhalf/project.nvim",
 		config = function()
-			-- あたし、プロジェクト管理を美しくしたの…ワークスペースが簡単に管理できるように（╹◡╹）
+			-- あたし、プロジェクト管理を美しくしたの…プロジェクトが簡単に見つかるように（╹◡╹）
 			require("project_nvim").setup({
 				detection_methods = { "lsp", "pattern" },
-				patterns = {
-					".git",
-					"_darcs",
-					".hg",
-					".bzr",
-					".svn",
-					"Makefile",
-					"package.json",
-					"go.mod",
-					"Cargo.toml",
-					"pyproject.toml",
-					"requirements.txt",
-					"setup.py",
-					"CMakeLists.txt",
-					"README.md",
-					"LICENSE",
-				},
-				ignore_lsp = {},
-				exclude_dirs = {
-					"~/.cargo",
-					"~/.config",
-					"~/.local",
-					"~/.cache",
-					"~/.npm",
-					"~/.go",
-				},
+				patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "pom.xml", "build.xml", "CMakeLists.txt" },
+				ignore_lsp = { "efm" },
+				exclude_dirs = {},
 				show_hidden = false,
-				silent_chdir = false,
+				silent_chdir = true,
 				scope_chdir = "global",
-				respect_buf_cwd = false,
-				update_focused_file = {
-					enable = true,
-					update_root = true,
-				},
+				datapath = vim.fn.stdpath("data"),
 			})
-			
+
 			-- Keybindings for project management
 			vim.keymap.set("n", "<leader>pp", "<cmd>ProjectRoot<CR>", { desc = "🏠 Go to Project Root" })
 			vim.keymap.set("n", "<leader>pl", "<cmd>ProjectList<CR>", { desc = "📁 Project List" })
@@ -105,33 +73,33 @@ return {
 						"<leader>dd - Return to dashboard from anywhere! 💜",
 						"",
 						"",
-                        ⠀⠀⠀⠀⠄⠠⠤⠤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠠⢀⣢⣈⣉⠁⡆⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⡏⢠⣾⢷⢶⣄⣕⠢⢄⠀⠀⣀⣠⠤⠔⠒⠒⠒⠒⠒⠒⠢⠤⠄⣀⠤⢊⣤⣶⣿⡿⣿⢹⢀⡇⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⢻⠈⣿⢫⡞⠛⡟⣷⣦⡝⠋⠉⣤⣤⣶⣶⣶⣿⣿⣿⡗⢲⣴⠀⠈⠑⣿⡟⡏⠀⢱⣮⡏⢨⠃⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠸⡅⣹⣿⠀⠀⢩⡽⠋⣠⣤⣿⣿⣏⣛⡻⠿⣿⢟⣹⣴⢿⣹⣿⡟⢦⣀⠙⢷⣤⣼⣾⢁⡾⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⢻⡀⢳⣟⣶⠯⢀⡾⢍⠻⣿⣿⣽⣿⣽⡻⣧⣟⢾⣹⡯⢷⡿⠁⠀⢻⣦⡈⢿⡟⠁⡼⠁⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⠀⢷⠠⢻⠏⢰⣯⡞⡌⣵⠣⠘⡉⢈⠓⡿⠳⣯⠋⠁⠀⠀⢳⡀⣰⣿⣿⣷⡈⢣⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⠀⠀⠙⣎⠀⣿⣿⣷⣾⣷⣼⣵⣆⠂⡐⢀⣴⣌⠀⣀⣤⣾⣿⣿⣿⣿⣿⣿⣷⣀⠣⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⠀⠀⠄⠑⢺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣳⣿⢽⣧⡤⢤⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⠀⠀⢸⣈⢹⣟⣿⣿⣿⣿⣿⣻⢹⣿⣻⢿⣿⢿⣽⣳⣯⣿⢷⣿⡷⣟⣯⣻⣽⠧⠾⢤⠀⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⠀⠀⢇⠤⢾⣟⡾⣽⣿⣽⣻⡗⢹⡿⢿⣻⠸⢿⢯⡟⡿⡽⣻⣯⣿⣎⢷⣣⡿⢾⢕⣎⠀⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⠀⡠⡞⡟⣻⣮⣍⡛⢿⣽⣻⡀⠁⣟⣣⠿⡠⣿⢏⡞⠧⠽⢵⣳⣿⣺⣿⢿⡋⠙⡀⠇⠱⡀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⢰⠠⠁⠀⢻⡿⣛⣽⣿⢟⡁⣭⣥⣅⠀⠀⠀⠀⠀⠀⣶⣟⣧⠿⢿⣿⣯⣿⡇⠀⡇⠀⢀⡇⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⢸⠀⠀⡇⢹⣾⣿⣿⣷⡿⢿⢷⡏⡈⠀⠀⠀⠀⠀⠀⠈⡹⡷⡎⢸⣿⣿⣿⡇⠀⡇⠀⠸⡇⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⢸⡄⠂⠖⢸⣿⣿⣿⡏⢃⠘⡊⠩⠁⠀⠀⠀⠀⠀⠀⠀⠁⠀⠁⢹⣿⣿⣿⡇⢰⢁⡌⢀⠇⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⠀⢷⡘⠜⣤⣿⣿⣿⣷⡅⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣧⣕⣼⣠⡵⠋⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⠀⣸⣻⣿⣾⣿⣿⣿⣿⣾⡄⠀⠀⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿⢀⠀⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⠀⡇⣿⣻⣿⣿⣿⣿⣿⣿⣿⣦⣤⣀⠀⠀⠀⠀⠀⠀⣠⣴⣾⣿⣿⣿⣿⣿⣿⣳⣿⡸⡀⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⠀⣸⢡⣿⢿⣿⣿⣿⣿⣿⣿⣿⢿⣿⡟⣽⠉⠀⠒⠂⠉⣯⢹⣿⡿⣿⣿⣿⣿⣿⣯⣿⡇⠇⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⠀⢰⡏⣼⡿⣿⣻⣿⣿⣿⣿⣿⢿⣻⡿⠁⠘⡆⠀⠀⠀⢠⠇⠘⣿⣿⣽⣿⣿⣿⣿⣯⣿⣷⣸⠀⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⢀⡟⢰⣾⢿⣿⣟⣿⣿⣿⣿⣿⡟⣿⣧⠀⠀⠈⠣⡄⡰⠋⠀⢀⢾⣿⡛⣿⣿⣿⣿⣿⣿⣿⣷⡆⠀⠀⠀⠀⠀⠀
-                        ⠀⠀⢸⢁⢦⣿⣻⣿⢿⣻⡽⣾⢿⡿⢷⣽⣻⠃⠂⠴⣎⠘⠦⡸⠠⠄⢻⣟⣿⠻⣿⣻⢷⣯⢿⣿⣽⣷⡀⠀⠀⠀⠀⠀
-                        ⠀⠀⡇⠎⣼⡷⣿⣟⣿⣯⢿⣽⣞⡇⣸⣷⡇⠰⠗⠐⣺⣀⣼⠒⠒⠦⠰⣿⣯⠇⢳⣯⣿⣞⣿⢾⣿⢿⢳⡄⠀⠀⠀⠀
-                        ⠀⢸⡿⢠⣿⣻⣿⢿⣼⣿⣿⣿⣼⣄⡻⢼⣧⠀⣀⣼⠟⣻⡟⢧⣤⣄⢠⣿⡃⢼⣿⢧⣿⣿⡿⣟⣿⣿⡄⢻⡀⠀⠀⠀
-                        ⠀⣼⠀⣾⡷⣿⣿⣿⢾⣿⣿⢾⠗⣛⡥⣾⠟⣞⠉⢀⣠⠙⢰⣀⡈⢙⡟⣿⣽⣲⢭⢛⣿⣿⣻⣽⣾⣷⣷⡀⠱⡀⠀⠀
-                        ⢠⢛⣰⣿⣟⣿⣿⣿⣿⣿⢯⣿⣧⢹⣽⣻⢾⣮⣷⣠⠗⢪⠐⢧⣼⣷⣶⣾⢷⣯⠏⣼⣿⣻⣯⣿⣿⣿⣯⣷⡄⢣⠀⠀
-                        ⡌⡆⣿⣿⣿⣿⣽⣿⣿⣿⣿⣿⣿⣦⡹⣿⣟⣾⣳⣿⣧⣼⣴⣝⣛⢾⣷⣯⣿⢊⣼⣿⣿⣿⣿⣿⣿⣿⣿⡿⣷⠈⡇⠀
-                        ⡇⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣍⡻⣿⣿⣿⣿⡄⣷⣯⣟⣿⡿⢟⣡⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠐⠀
+						"⠀⠀⠀⠀⠄⠠⠤⠤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠠⢀⣢⣈⣉⠁⡆⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⡏⢠⣾⢷⢶⣄⣕⠢⢄⠀⠀⣀⣠⠤⠔⠒⠒⠒⠒⠒⠒⠢⠤⠄⣀⠤⢊⣤⣶⣿⡿⣿⢹⢀⡇⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⢻⠈⣿⢫⡞⠛⡟⣷⣦⡝⠋⠉⣤⣤⣶⣶⣶⣿⣿⣿⡗⢲⣴⠀⠈⠑⣿⡟⡏⠀⢱⣮⡏⢨⠃⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠸⡅⣹⣿⠀⠀⢩⡽⠋⣠⣤⣿⣿⣏⣛⡻⠿⣿⢟⣹⣴⢿⣹⣿⡟⢦⣀⠙⢷⣤⣼⣾⢁⡾⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⢻⡀⢳⣟⣶⠯⢀⡾⢍⠻⣿⣿⣽⣿⣽⡻⣧⣟⢾⣹⡯⢷⡿⠁⠀⢻⣦⡈⢿⡟⠁⡼⠁⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⠀⢷⠠⢻⠏⢰⣯⡞⡌⣵⠣⠘⡉⢈⠓⡿⠳⣯⠋⠁⠀⠀⢳⡀⣰⣿⣿⣷⡈⢣⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⠀⠀⠙⣎⠀⣿⣿⣷⣾⣷⣼⣵⣆⠂⡐⢀⣴⣌⠀⣀⣤⣾⣿⣿⣿⣿⣿⣿⣿⣷⣀⠣⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⠀⠀⠄⠑⢺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣳⣿⢽⣧⡤⢤⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⠀⠀⢸⣈⢹⣟⣿⣿⣿⣿⣿⣻⢹⣿⣻⢿⣿⢿⣽⣳⣯⣿⢷⣿⡷⣟⣯⣻⣽⠧⠾⢤⠀⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⠀⠀⢇⠤⢾⣟⡾⣽⣿⣽⣻⡗⢹⡿⢿⣻⠸⢿⢯⡟⡿⡽⣻⣯⣿⣎⢷⣣⡿⢾⢕⣎⠀⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⠀⡠⡞⡟⣻⣮⣍⡛⢿⣽⣻⡀⠁⣟⣣⠿⡠⣿⢏⡞⠧⠽⢵⣳⣿⣺⣿⢿⡋⠙⡀⠇⠱⡀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⢰⠠⠁⠀⢻⡿⣛⣽⣿⢟⡁⣭⣥⣅⠀⠀⠀⠀⠀⠀⣶⣟⣧⠿⢿⣿⣯⣿⡇⠀⡇⠀⢀⡇⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⢸⠀⠀⡇⢹⣾⣿⣿⣷⡿⢿⢷⡏⡈⠀⠀⠀⠀⠀⠀⠈⡹⡷⡎⢸⣿⣿⣿⡇⠀⡇⠀⠸⡇⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⢸⡄⠂⠖⢸⣿⣿⣿⡏⢃⠘⡊⠩⠁⠀⠀⠀⠀⠀⠀⠀⠁⠀⠁⢹⣿⣿⣿⡇⢰⢁⡌⢀⠇⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⠀⢷⡘⠜⣤⣿⣿⣿⣷⡅⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣧⣕⣼⣠⡵⠋⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⠀⣸⣻⣿⣾⣿⣿⣿⣿⣾⡄⠀⠀⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿⢀⠀⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⠀⡇⣿⣻⣿⣿⣿⣿⣿⣿⣿⣦⣤⣀⠀⠀⠀⠀⠀⠀⣠⣴⣾⣿⣿⣿⣿⣿⣿⣳⣿⡸⡀⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⠀⣸⢡⣿⢿⣿⣿⣿⣿⣿⣿⣿⢿⣿⡟⣽⠉⠀⠒⠂⠉⣯⢹⣿⡿⣿⣿⣿⣿⣿⣯⣿⡇⠇⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⠀⢰⡏⣼⡿⣿⣻⣿⣿⣿⣿⣿⢿⣻⡿⠁⠘⡆⠀⠀⠀⢠⠇⠘⣿⣿⣽⣿⣿⣿⣿⣯⣿⣷⣸⠀⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⢀⡟⢰⣾⢿⣿⣟⣿⣿⣿⣿⣿⡟⣿⣧⠀⠀⠈⠣⡄⡰⠋⠀⢀⢾⣿⡛⣿⣿⣿⣿⣿⣿⣿⣷⡆⠀⠀⠀⠀⠀⠀",
+						"⠀⠀⢸⢁⢦⣿⣻⣿⢿⣻⡽⣾⢿⡿⢷⣽⣻⠃⠂⠴⣎⠘⠦⡸⠠⠄⢻⣟⣿⠻⣿⣻⢷⣯⢿⣿⣽⣷⡀⠀⠀⠀⠀⠀",
+						"⠀⠀⡇⠎⣼⡷⣿⣟⣿⣯⢿⣽⣞⡇⣸⣷⡇⠰⠗⠐⣺⣀⣼⠒⠒⠦⠰⣿⣯⠇⢳⣯⣿⣞⣿⢾⣿⢿⢳⡄⠀⠀⠀⠀",
+						"⠀⢸⡿⢠⣿⣻⣿⢿⣼⣿⣿⣿⣼⣄⡻⢼⣧⠀⣀⣼⠟⣻⡟⢧⣤⣄⢠⣿⡃⢼⣿⢧⣿⣿⡿⣟⣿⣿⡄⢻⡀⠀⠀⠀",
+						"⠀⣼⠀⣾⡷⣿⣿⣿⢾⣿⣿⢾⠗⣛⡥⣾⠟⣞⠉⢀⣠⠙⢰⣀⡈⢙⡟⣿⣽⣲⢭⢛⣿⣿⣻⣽⣾⣷⣷⡀⠱⡀⠀⠀",
+						"⢠⢛⣰⣿⣟⣿⣿⣿⣿⣿⢯⣿⣧⢹⣽⣻⢾⣮⣷⣠⠗⢪⠐⢧⣼⣷⣶⣾⢷⣯⠏⣼⣿⣻⣯⣿⣿⣿⣯⣷⡄⢣⠀⠀",
+						"⡌⡆⣿⣿⣿⣿⣽⣿⣿⣿⣿⣿⣿⣦⡹⣿⣟⣾⣳⣿⣧⣼⣴⣝⣛⢾⣷⣯⣿⢊⣼⣿⣿⣿⣿⣿⣿⣿⣿⡿⣷⠈⡇⠀",
+						"⡇⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣍⡻⣿⣿⣿⣿⡄⣷⣯⣟⣿⡿⢟⣡⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠐⠀",
 						"",
 					},
 				},
