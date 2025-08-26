@@ -448,37 +448,8 @@ return {
 					buffer_visible = {
 						bold = true,
 					},
-					-- VIOLENT ERROR HIGHLIGHTS! 🔥💀⚡
-					buffer_selected_error = {
-						fg = "#ff0000",
-						bg = "#000000",
-						sp = "#ff0000",
-						bold = true,
-						underline = true,
-						italic = true,
-					},
-					buffer_selected_warning = {
-						fg = "#ff8800",
-						bg = "#000000",
-						sp = "#ff8800",
-						bold = true,
-						underline = true,
-						italic = true,
-					},
-					buffer_error = {
-						fg = "#ff0000",
-						bg = "#000000",
-						sp = "#ff0000",
-						bold = true,
-						underline = true,
-					},
-					buffer_warning = {
-						fg = "#ff8800",
-						bg = "#000000",
-						sp = "#ff8800",
-						bold = true,
-						underline = true,
-					},
+					-- あたし、エラーハイライトを一時的に無効にしたの…設定が正しく動作するように（╹◡╹）
+					-- TODO: Add proper error highlights once we confirm the correct names
 				},
 			})
 		end,
@@ -672,7 +643,7 @@ return {
 		end,
 	},
 
-	-- Right-click context menu for copy/paste/create/delete
+	-- File explorer with beautiful theme (single, clean configuration)
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
@@ -752,87 +723,4 @@ return {
 			})
 		end,
 	},
-
-	-- Right-click context menu for copy/paste/create/delete
-	{
-		"nvim-neo-tree/neo-tree.nvim",
-		branch = "v3.x",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"MunifTanjim/nui.nvim",
-		},
-		config = function()
-			require("neo-tree").setup({
-				-- あたし、Neo-treeをCatppuccinテーマで美しくしたの…青い色が嫌だったから（╹◡╹）
-				window = {
-					position = "left",
-					width = "30",
-					mappings = {
-						["<space>"] = "none",
-					},
-				},
-				filesystem = {
-					filtered_items = {
-						visible = false,
-						hide_dotfiles = false,
-						hide_gitignored = false,
-					},
-					use_libuv_file_watcher = true,
-					follow_current_file = {
-						enabled = true,
-						leave_dirs_open = false,
-					},
-				},
-				default_component_configs = {
-					git_status = {
-						symbols = {
-							added = "✨",
-							modified = "💫",
-							deleted = "💔",
-							renamed = "💕",
-							untracked = "💭",
-							ignored = "💤",
-							unstaged = "⚡",
-							staged = "💎",
-							conflict = "💥",
-						},
-					},
-					indent = {
-						indent_size = 2,
-						padding = 1,
-						with_markers = true,
-						indent_marker = "│",
-						last_indent_marker = "└",
-						highlight = "NeoTreeIndentMarker",
-						with_expanders = nil,
-						expander_collapsed = "",
-						expander_expanded = "",
-						expander_highlight = "NeoTreeExpander",
-					},
-				},
-				-- Use Catppuccin theme colors
-				enable_git_status = true,
-				git_status_async = true,
-				use_popups_for_input = false,
-				popup_border_style = "rounded",
-				enable_diagnostics = true,
-				sort_function = nil,
-				default_path = nil,
-				-- Beautiful colors that match your theme
-				colors = {
-					git = {
-						unstaged = "#ff6b6b",
-						staged = "6bcf7f",
-						unstaged = "#ffa07a",
-						renamed = "#a29bfe",
-						untracked = "#fdcb6e",
-						ignored = "#636e72",
-					},
-				},
-			})
-		end,
-	},
-
-
 } 

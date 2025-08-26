@@ -319,4 +319,376 @@ return {
 			vim.keymap.set("n", "<leader>gco", ":Git checkout<CR>")
 		end,
 	},
+
+	-- Language-specific tools and formatters (using Mason's built-in system)
+	{
+		"williamboman/mason.nvim",
+		config = function()
+			-- あたし、Masonの設定を改善したの…言語固有のツールが自動でインストールされるように（╹◡╹）
+			require("mason").setup({
+				ui = {
+					border = "rounded",
+					icons = {
+						package_installed = "✅",
+						package_pending = "⏳",
+						package_uninstalled = "❌",
+					},
+				},
+				-- Ensure all important tools are installed
+				ensure_installed = {
+					-- Go tools
+					"gopls",
+					"gofumpt",
+					"goimports",
+					"gomodifytags",
+					"impl",
+					"fillstruct",
+					"delve", -- Go debugger
+					
+					-- C++ tools
+					"clangd",
+					"clang-format",
+					"cppcheck",
+					"clang-tidy",
+					
+					-- TypeScript/JavaScript tools
+					"typescript-language-server",
+					"prettier",
+					"eslint_d",
+					
+					-- General tools
+					"stylua",
+					"luacheck",
+					"lua-language-server",
+					"rust-analyzer",
+					"pyright",
+				},
+				automatic_installation = true,
+			})
+		end,
+	},
+
+	-- Auto-formatting and code actions
+	{
+		"stevearc/conform.nvim",
+		config = function()
+			-- あたし、自動フォーマットを設定したの…コードが美しくなるように（╹◡╹）
+			-- Only use formatters that are actually available
+			local conform = require("conform")
+			
+			-- Function to check if a formatter is available
+			local function is_formatter_available(formatter_name)
+				local ok, _ = pcall(vim.fn.executable, formatter_name)
+				return ok and vim.fn.executable(formatter_name) == 1
+			end
+			
+			-- Configure formatters based on availability
+			local formatters_by_ft = {
+				-- Go formatting (only if tools are available)
+				go = {},
+				
+				-- C++ formatting (only if clang-format is available)
+				cpp = {},
+				c = {},
+				
+				-- TypeScript/JavaScript formatting (only if prettier is available)
+				typescript = {},
+				javascript = {},
+				tsx = {},
+				jsx = {},
+				
+				-- General formatting (only if tools are available)
+				lua = {},
+				json = {},
+				yaml = {},
+				markdown = {},
+				html = {},
+				css = {},
+			}
+			
+			-- Add available formatters
+			if is_formatter_available("goimports") then
+				table.insert(formatters_by_ft.go, "goimports")
+			end
+			
+			if is_formatter_available("gofumpt") then
+				table.insert(formatters_by_ft.go, "gofumpt")
+			end
+			
+			if is_formatter_available("clang-format") then
+				formatters_by_ft.cpp = { "clang_format" }
+				formatters_by_ft.c = { "clang_format" }
+			end
+			
+			if is_formatter_available("prettier") then
+				formatters_by_ft.typescript = { "prettier" }
+				formatters_by_ft.javascript = { "prettier" }
+				formatters_by_ft.tsx = { "prettier" }
+				formatters_by_ft.jsx = { "prettier" }
+				formatters_by_ft.json = { "prettier" }
+				formatters_by_ft.yaml = { "prettier" }
+				formatters_by_ft.markdown = { "prettier" }
+				formatters_by_ft.html = { "prettier" }
+				formatters_by_ft.css = { "prettier" }
+			end
+			
+			if is_formatter_available("stylua") then
+				formatters_by_ft.lua = { "stylua" }
+			end
+			
+			-- Set the formatters
+			conform.setup({
+				formatters_by_ft = formatters_by_ft,
+				format_on_save = {
+					timeout_ms = 500,
+					lsp_fallback = true,
+				},
+				notify_on_error = true,
+			})
+			
+			-- Format keybindings
+			vim.keymap.set("n", "<leader>ff", function()
+				require("conform").format({ async = true, lsp_fallback = true })
+			end, { desc = "Format buffer" })
+			
+			vim.keymap.set("n", "<leader>fF", function()
+				require("conform").format({ async = false, lsp_fallback = true })
+			end, { desc = "Format buffer (sync)" })
+			
+			-- Notify about available formatters
+			local available_count = 0
+			for ft, formatters in pairs(formatters_by_ft) do
+				if #formatters > 0 then
+					available_count = available_count + 1
+				end
+			end
+			
+			if available_count > 0 then
+				vim.notify("✨ Formatting configured for " .. available_count .. " file types", vim.log.levels.INFO)
+			else
+				vim.notify("💫 No formatters available - consider installing some development tools", vim.log.levels.INFO)
+			end
+		end,
+	},
+
+	-- Treesitter for enhanced syntax highlighting
+	{
+		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate",
+		config = function()
+			-- あたし、Treesitterを美しくしたの…シンタックスハイライトが最高になるように（╹◡╹）
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = {
+					"go",
+					"cpp",
+					"c",
+					"typescript",
+					"javascript",
+					"tsx",
+					"lua",
+					"rust",
+					"python",
+					"html",
+					"css",
+					"json",
+					"yaml",
+					"markdown",
+				},
+				highlight = {
+					enable = true,
+					additional_vim_regex_highlighting = false,
+				},
+				indent = {
+					enable = true,
+				},
+				incremental_selection = {
+					enable = true,
+					keymaps = {
+						init_selection = "<CR>",
+						node_incremental = "<CR>",
+						node_decremental = "<BS>",
+						scope_incremental = "<TAB>",
+					},
+				},
+				textobjects = {
+					enable = true,
+					keymaps = {
+						["af"] = "@function.outer",
+						["if"] = "@function.inner",
+						["ac"] = "@class.outer",
+						["ic"] = "@class.inner",
+						["ab"] = "@block.outer",
+						["ib"] = "@block.inner",
+					},
+				},
+			})
+		end,
+	},
+
+	-- Linting and diagnostics
+	{
+		"mfussenegger/nvim-lint",
+		config = function()
+			-- あたし、リンティングを設定したの…コードの品質が上がるように（╹◡╹）
+			-- Only use linters that are actually available
+			local lint = require("lint")
+			
+			-- Function to check if a linter is available
+			local function is_linter_available(linter_name)
+				local ok, _ = pcall(vim.fn.executable, linter_name)
+				return ok and vim.fn.executable(linter_name) == 1
+			end
+			
+			-- Configure linters based on availability
+			local linters_by_ft = {
+				-- Go linting (only if golangci-lint is available)
+				go = {},
+				
+				-- C++ linting (only if tools are available)
+				cpp = {},
+				c = {},
+				
+				-- TypeScript/JavaScript linting (only if eslint_d is available)
+				typescript = {},
+				javascript = {},
+				tsx = {},
+				jsx = {},
+				
+				-- General linting (only if tools are available)
+				lua = {},
+				markdown = {},
+			}
+			
+			-- Add available linters
+			if is_linter_available("golangci-lint") then
+				linters_by_ft.go = { "golangci-lint" }
+			end
+			
+			if is_linter_available("cppcheck") then
+				table.insert(linters_by_ft.cpp, "cppcheck")
+				table.insert(linters_by_ft.c, "cppcheck")
+			end
+			
+			if is_linter_available("clang-tidy") then
+				table.insert(linters_by_ft.cpp, "clang-tidy")
+				table.insert(linters_by_ft.c, "clang-tidy")
+			end
+			
+			if is_linter_available("eslint_d") then
+				linters_by_ft.typescript = { "eslint_d" }
+				linters_by_ft.javascript = { "eslint_d" }
+				linters_by_ft.tsx = { "eslint_d" }
+				linters_by_ft.jsx = { "eslint_d" }
+			end
+			
+			if is_linter_available("luacheck") then
+				linters_by_ft.lua = { "luacheck" }
+			end
+			
+			if is_linter_available("markdownlint") then
+				linters_by_ft.markdown = { "markdownlint" }
+			end
+			
+			-- Set the linters
+			lint.linters_by_ft = linters_by_ft
+			
+			-- Auto-lint on save (only if linters are available)
+			vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
+				callback = function()
+					-- Only lint if there are linters available for this filetype
+					local ft = vim.bo.filetype
+					if linters_by_ft[ft] and #linters_by_ft[ft] > 0 then
+						require("lint").try_lint()
+					end
+				end,
+			})
+			
+			-- InsertLeave autocmd with better error handling
+			vim.api.nvim_create_autocmd("InsertLeave", {
+				pattern = "*",
+				callback = function()
+					-- Only lint if there are linters available for this filetype
+					local ft = vim.bo.filetype
+					if linters_by_ft[ft] and #linters_by_ft[ft] > 0 then
+						-- Use pcall to safely run linting
+						local ok, _ = pcall(require("lint").try_lint)
+						if not ok then
+							-- If linting fails, just continue silently
+							-- This prevents errors from breaking the user experience
+						end
+					end
+				end,
+			})
+			
+			-- Notify about available linters
+			local available_count = 0
+			for ft, linters in pairs(linters_by_ft) do
+				if #linters > 0 then
+					available_count = available_count + 1
+				end
+			end
+			
+			if available_count > 0 then
+				vim.notify("✨ Linting configured for " .. available_count .. " file types", vim.log.levels.INFO)
+			else
+				vim.notify("💫 No linters available - consider installing some development tools", vim.log.levels.INFO)
+			end
+		end,
+	},
+
+	-- Debug adapter protocol for debugging
+	{
+		"mfussenegger/nvim-dap",
+		dependencies = {
+			"rcarriga/nvim-dap-ui",
+			"leoluz/nvim-dap-go",
+			"mfussenegger/nvim-dap-python",
+			"nvim-neotest/nvim-nio", -- Required by dap-ui
+		},
+		config = function()
+			-- あたし、デバッグツールを追加したの…Go、C++、TypeScriptのデバッグが簡単になるように（╹◡╹）
+			local dap = require("dap")
+			local dapui = require("dapui")
+			
+			-- Setup DAP UI
+			dapui.setup({
+				layouts = {
+					{
+						elements = {
+							{ id = "scopes", size = 0.33 },
+							{ id = "breakpoints", size = 0.17 },
+							{ id = "stacks", size = 0.25 },
+							{ id = "watches", size = 0.25 },
+						},
+						size = 0.33,
+						position = "right",
+					},
+					{
+						elements = {
+							{ id = "repl", size = 0.45 },
+							{ id = "console", size = 0.55 },
+						},
+						size = 0.27,
+						position = "bottom",
+					},
+				},
+			})
+			
+			-- Setup Go debugging
+			require("dap-go").setup()
+			
+			-- Setup Python debugging
+			require("dap-python").setup("python")
+			
+			-- DAP keybindings
+			vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint)
+			vim.keymap.set("n", "<leader>dc", dap.continue)
+			vim.keymap.set("n", "<leader>di", dap.step_into)
+			vim.keymap.set("n", "<leader>do", dap.step_over)
+			vim.keymap.set("n", "<leader>du", dap.step_out)
+			vim.keymap.set("n", "<leader>dr", dap.repl.toggle)
+			vim.keymap.set("n", "<leader>dl", dap.run_last)
+			vim.keymap.set("n", "<leader>dt", dapui.toggle)
+		end,
+	},
 } 

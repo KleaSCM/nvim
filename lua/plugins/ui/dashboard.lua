@@ -30,7 +30,7 @@ return {
 				},
 				project = { enable = false },
 				footer = {
-					"PLACEHOLDER",
+					"PLACEHOLDR",
 					"",
 					"💕"
 				}

@@ -111,10 +111,10 @@ return {
 				end,
 			})
 			
-			-- Configure TypeScript/JavaScript LSP
+			-- Configure TypeScript/JavaScript LSP with enhanced features
 			lspconfig.ts_ls.setup({
 				on_attach = function(client, bufnr)
-					-- あたし、LSPの設定を改善したの…補完が正しく動作するように（╹◡╹）
+					-- あたし、TypeScript LSPの設定を改善したの…TS開発が最高になるように（╹◡╹）
 					local bufopts = { noremap = true, silent = true, buffer = bufnr }
 					vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
 					vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
@@ -122,10 +122,59 @@ return {
 					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
 					vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
 					
+					-- TypeScript specific keybindings
+					vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, bufopts)
+					vim.keymap.set("n", "<leader>gt", vim.lsp.buf.type_definition, bufopts)
+					vim.keymap.set("n", "<leader>gs", vim.lsp.buf.document_symbol, bufopts)
+					vim.keymap.set("n", "<leader>gw", vim.lsp.buf.workspace_symbol, bufopts)
+					vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, bufopts)
+					vim.keymap.set("n", "<leader>go", vim.lsp.buf.code_action, bufopts)
+					
 					-- Debug LSP connection
 					vim.notify("TypeScript LSP attached to buffer " .. bufnr, vim.log.levels.INFO)
 				end,
 				capabilities = require("cmp_nvim_lsp").default_capabilities(),
+				-- Enhanced TypeScript LSP settings
+				settings = {
+					typescript = {
+						inlayHints = {
+							includeInlayParameterNameHints = "all",
+							includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+							includeInlayFunctionParameterTypeHints = true,
+							includeInlayVariableTypeHints = true,
+							includeInlayPropertyDeclarationTypeHints = true,
+							includeInlayFunctionLikeReturnTypeHints = true,
+							includeInlayEnumMemberValueHints = true,
+						},
+						suggest = {
+							completeFunctionCalls = true,
+						},
+						format = {
+							indentSize = 2,
+							convertTabsToSpaces = true,
+							tabSize = 2,
+						},
+					},
+					javascript = {
+						inlayHints = {
+							includeInlayParameterNameHints = "all",
+							includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+							includeInlayFunctionParameterTypeHints = true,
+							includeInlayVariableTypeHints = true,
+							includeInlayPropertyDeclarationTypeHints = true,
+							includeInlayFunctionLikeReturnTypeHints = true,
+							includeInlayEnumMemberValueHints = true,
+						},
+						suggest = {
+							completeFunctionCalls = true,
+						},
+						format = {
+							indentSize = 2,
+							convertTabsToSpaces = true,
+							tabSize = 2,
+						},
+					},
+				},
 				-- Ensure server starts properly
 				autostart = true,
 				flags = {
@@ -192,6 +241,71 @@ return {
 				capabilities = require("cmp_nvim_lsp").default_capabilities(),
 			})
 			
+			-- Configure C++ LSP (clangd) with enhanced features
+			lspconfig.clangd.setup({
+				on_attach = function(client, bufnr)
+					-- あたし、C++ LSPの設定を改善したの…C++開発が最高になるように（╹◡╹）
+					local bufopts = { noremap = true, silent = true, buffer = bufnr }
+					vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+					vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
+					vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
+					vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+					
+					-- C++ specific keybindings
+					vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, bufopts)
+					vim.keymap.set("n", "<leader>gt", vim.lsp.buf.type_definition, bufopts)
+					vim.keymap.set("n", "<leader>gs", vim.lsp.buf.document_symbol, bufopts)
+					vim.keymap.set("n", "<leader>gw", vim.lsp.buf.workspace_symbol, bufopts)
+					vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, bufopts)
+					
+					-- Debug LSP connection
+					vim.notify("C++ LSP attached to buffer " .. bufnr, vim.log.levels.INFO)
+				end,
+				capabilities = require("cmp_nvim_lsp").default_capabilities(),
+				-- Enhanced C++ LSP settings
+				settings = {
+					clangd = {
+						arguments = {
+							"--background-index",
+							"--clang-tidy",
+							"--completion-style=detailed",
+							"--fallback-style=Google",
+							"--header-insertion=iwyu",
+							"--suggest-missing-includes",
+							"--all-scopes-completion",
+							"--cross-file-rename",
+							"--enable-config",
+							"--function-arg-placeholders",
+							"--pch-storage=memory",
+							"--pretty",
+							"--ranking-model=heuristics",
+							"--strict-file-overview",
+						},
+						completion = {
+							detailedLabel = true,
+							triggerAfterInsertion = true,
+						},
+						diagnostics = {
+							enable = true,
+							clangTidy = true,
+						},
+						index = {
+							background = true,
+							external = {
+								dir = vim.fn.expand("~/.cache/clangd"),
+								changeThreshold = 1000,
+							},
+						},
+					},
+				},
+				-- Ensure server starts properly
+				autostart = true,
+				flags = {
+					debounce_text_changes = 150,
+				},
+			})
+			
 			-- Configure Rust LSP (rust-analyzer)
 			lspconfig.rust_analyzer.setup({
 				on_attach = function(client, bufnr)
@@ -226,17 +340,62 @@ return {
 				},
 			})
 			
-			-- Configure Go LSP (gopls)
+			-- Configure Go LSP (gopls) with enhanced features
 			lspconfig.gopls.setup({
 				on_attach = function(client, bufnr)
+					-- あたし、Go LSPの設定を改善したの…Go開発が最高になるように（╹◡╹）
 					local bufopts = { noremap = true, silent = true, buffer = bufnr }
 					vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
 					vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
 					vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
 					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
 					vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+					
+					-- Go-specific keybindings
+					vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, bufopts)
+					vim.keymap.set("n", "<leader>gt", vim.lsp.buf.type_definition, bufopts)
+					vim.keymap.set("n", "<leader>gs", vim.lsp.buf.document_symbol, bufopts)
+					vim.keymap.set("n", "<leader>gw", vim.lsp.buf.workspace_symbol, bufopts)
+					
+					-- Debug LSP connection
+					vim.notify("Go LSP attached to buffer " .. bufnr, vim.log.levels.INFO)
 				end,
 				capabilities = require("cmp_nvim_lsp").default_capabilities(),
+				-- Enhanced Go LSP settings
+				settings = {
+					gopls = {
+						analyses = {
+							unusedparams = true,
+							shadow = true,
+							nilness = true,
+							fieldalignment = true,
+						},
+						staticcheck = true,
+						gofumpt = true,
+						usePlaceholders = true,
+						completionDocumentation = true,
+						hints = {
+							assignVariableTypes = true,
+							compositeLiteralFields = true,
+							compositeLiteralTypes = true,
+							functionTypeParameters = true,
+							parameterNames = true,
+							rangeVariableTypes = true,
+						},
+						matcher = "fuzzy",
+						symbolMatcher = "fuzzy",
+						symbolStyle = "full",
+						buildFlags = { "-tags=all" },
+						env = {
+							GOFLAGS = "-mod=mod",
+						},
+					},
+				},
+				-- Ensure server starts properly
+				autostart = true,
+				flags = {
+					debounce_text_changes = 150,
+				},
 			})
 			
 			-- Configure Python LSP (pyright)

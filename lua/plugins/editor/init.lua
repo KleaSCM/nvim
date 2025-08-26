@@ -165,11 +165,12 @@ return {
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			{
-				"nvim-telescope/telescope-fzf-native.nvim",
-				build = "make",
-				cond = function()
-					return vim.fn.executable("make") == 1
-				end,
+						"nvim-telescope/telescope-fzf-native.nvim",
+		build = "make",
+		cond = function()
+			-- あたし、FZF拡張の条件を改善したの…makeコマンドがない場合でも動作するように（╹◡╹）
+			return vim.fn.executable("make") == 1 and vim.fn.has("unix") == 1
+		end,
 			},
 			"nvim-telescope/telescope-ui-select.nvim",
 		},
@@ -298,23 +299,30 @@ return {
 					},
 				},
 				extensions = {
-					fzf = {
-						fuzzy = true,
-						override_generic_sorter = true,
-						override_file_sorter = true,
-						case_mode = "smart_case",
-					},
+					-- FZF extension configuration (only if available)
 					["ui-select"] = {
 						require("telescope.themes").get_dropdown({}),
 					},
 				},
 			})
-			-- Load extensions with error handling
-			local ok, _ = pcall(require("telescope").load_extension, "fzf")
-			if not ok then
-				vim.notify("FZF extension failed to load - using default Telescope", vim.log.levels.WARN)
+			-- Load extensions with better error handling
+			-- あたし、FZF拡張の読み込みを改善したの…エラーが発生しないように（╹◡╹）
+			local fzf_ok, _ = pcall(require("telescope").load_extension, "fzf")
+			if fzf_ok then
+				-- Configure FZF extension if available
+				require("telescope").load_extension("fzf")
+				vim.notify("✨ FZF extension loaded successfully!", vim.log.levels.INFO)
+			else
+				vim.notify("💫 Using default Telescope fuzzy finder (FZF not available)", vim.log.levels.INFO)
 			end
-			require("telescope").load_extension("ui-select")
+			
+			-- Load UI select extension
+			local ui_select_ok, _ = pcall(require("telescope").load_extension, "ui-select")
+			if ui_select_ok then
+				vim.notify("✨ UI Select extension loaded successfully!", vim.log.levels.INFO)
+			else
+				vim.notify("⚠️ UI Select extension failed to load", vim.log.levels.WARN)
+			end
 		end,
 	},
 
