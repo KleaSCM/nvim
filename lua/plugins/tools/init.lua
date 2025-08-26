@@ -691,4 +691,8 @@ return {
 			vim.keymap.set("n", "<leader>dt", dapui.toggle)
 		end,
 	},
+
+	-- Import additional tool modules
+	{ import = "plugins.tools.task-management" },
+	{ import = "plugins.tools.file-management" },
 } 
