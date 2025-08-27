@@ -339,3 +339,5 @@ map("n", leader .. "wl", function()
 	
 	print("✨ Perfect three-panel layout set up!")
 end, opts) 
+
+ 

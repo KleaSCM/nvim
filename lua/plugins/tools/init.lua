@@ -607,6 +607,67 @@ return {
 		end,
 	},
 
+	-- Enhanced Rust development tools
+	{
+		"simrat39/rust-tools.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			require("rust-tools").setup({
+				-- あたし、Rustツールを完全にセットアップしたの…JetBrainsみたいに使えるように（╹◡╹）
+				tools = {
+					-- Auto-hover actions
+					hover_actions = {
+						border = "rounded",
+						max_width = nil,
+						max_height = nil,
+						auto_focus = false,
+					},
+					-- Inlay hints
+					inlay_hints = {
+						show_parameter_hints = true,
+						parameter_hints_prefix = "<- ",
+						other_hints_prefix = "=> ",
+						max_len_align = false,
+						max_len_align_padding = 1,
+						right_align = false,
+						right_align_padding = 7,
+						highlight = "Comment",
+					},
+
+				},
+				-- Server configuration
+				server = {
+					on_attach = function(client, bufnr)
+						local opts = { buffer = bufnr, noremap = true, silent = true }
+						
+						-- Rust-specific keybindings
+						vim.keymap.set("n", "<leader>rr", "<cmd>RustRunnable<CR>", opts)
+						vim.keymap.set("n", "<leader>rt", "<cmd>RustTest<CR>", opts)
+						vim.keymap.set("n", "<leader>rb", "<cmd>RustBuild<CR>", opts)
+						vim.keymap.set("n", "<leader>rc", "<cmd>RustCheck<CR>", opts)
+						vim.keymap.set("n", "<leader>rf", "<cmd>RustFmt<CR>", opts)
+						vim.keymap.set("n", "<leader>rm", "<cmd>RustMacro<CR>", opts)
+						vim.keymap.set("n", "<leader>rl", "<cmd>RustLayout<CR>", opts)
+						vim.keymap.set("n", "<leader>rd", "<cmd>RustDebuggables<CR>", opts)
+						vim.keymap.set("n", "<leader>rh", "<cmd>RustHoverActions<CR>", opts)
+						vim.keymap.set("n", "<leader>rs", "<cmd>RustSymbolSearch<CR>", opts)
+						vim.keymap.set("n", "<leader>rw", "<cmd>RustWorkspaceSymbol<CR>", opts)
+						vim.keymap.set("n", "<leader>rv", "<cmd>RustViewCrateGraph<CR>", opts)
+						vim.keymap.set("n", "<leader>rx", "<cmd>RustExpandMacro<CR>", opts)
+						vim.keymap.set("n", "<leader>ry", "<cmd>RustOpenCargo<CR>", opts)
+						vim.keymap.set("n", "<leader>rz", "<cmd>RustReloadWorkspace<CR>", opts)
+						
+						-- Enhanced diagnostics
+						vim.diagnostic.config({
+							virtual_text = true, signs = true, underline = true,
+							update_in_insert = false, severity_sort = true,
+						}, bufnr)
+					end,
+				},
+			})
+		end,
+	},
+
 	-- Import additional tool modules
 	{ import = "plugins.tools.task-management" },
 	{ import = "plugins.tools.file-management" },

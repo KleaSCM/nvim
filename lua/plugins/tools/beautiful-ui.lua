@@ -88,6 +88,8 @@ return {
 						Variable = "🔮",
 					},
 				},
+				
+
 				-- Beautiful notify
 				notify = {
 					enabled = true,
@@ -443,4 +445,7 @@ return {
 			})
 		end,
 	},
+
+
+
 } 
