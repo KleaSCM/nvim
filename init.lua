@@ -44,6 +44,9 @@ require("core.treesitter")   -- Tree-sitter setup
 require("core.telescope")    -- Telescope configuration
 -- Cursor CLI integration is now handled via terminal splits in keymaps
 
+-- Load utility functions
+require("utils")              -- Utility functions
+
 -- Final setup
 require("core.statusline")   -- Status line configuration
 require("core.tabline")      -- Tab line configuration

@@ -156,6 +156,50 @@ return {
 							bg = "#000000",
 							bold = true,
 						},
+						
+						-- DASHBOARD HIGHLIGHTS! ✨💕 (so Yuriko can see her cute ASCII girl!)
+						DashboardHeader = {
+							fg = "#ffffff",
+							bg = "NONE",
+							bold = true,
+						},
+						
+						DashboardCenter = {
+							fg = "#ffffff",
+							bg = "NONE",
+						},
+						
+						DashboardFooter = {
+							fg = "#ffffff",
+							bg = "NONE",
+						},
+						
+						DashboardShortcut = {
+							fg = "#ffffff",
+							bg = "NONE",
+						},
+						
+						DashboardShortcutIcon = {
+							fg = colors.flamingo,
+							bg = "NONE",
+							bold = true,
+						},
+						
+						DashboardShortcutSection = {
+							fg = colors.sky,
+							bg = "NONE",
+						},
+						
+						DashboardShortcutKey = {
+							fg = colors.rosewater,
+							bg = "NONE",
+							bold = true,
+						},
+						
+						DashboardShortcutDesc = {
+							fg = colors.green,
+							bg = "NONE",
+						},
 					}
 				end,
 				integrations = {
@@ -646,84 +690,5 @@ return {
 		end,
 	},
 
-	-- File explorer with beautiful theme (single, clean configuration)
-	{
-		"nvim-neo-tree/neo-tree.nvim",
-		branch = "v3.x",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"MunifTanjim/nui.nvim",
-		},
-		config = function()
-			require("neo-tree").setup({
-				-- あたし、Neo-treeをCatppuccinテーマで美しくしたの…青い色が嫌だったから（╹◡╹）
-				window = {
-					position = "left",
-					width = 30,
-					mappings = {
-						["<space>"] = "none",
-					},
-				},
-				filesystem = {
-					filtered_items = {
-						visible = false,
-						hide_dotfiles = false,
-						hide_gitignored = false,
-					},
-					use_libuv_file_watcher = true,
-					follow_current_file = {
-						enabled = true,
-						leave_dirs_open = false,
-					},
-				},
-				default_component_configs = {
-					git_status = {
-						symbols = {
-							added = "✨",
-							modified = "💫",
-							deleted = "💔",
-							renamed = "💕",
-							untracked = "💭",
-							ignored = "💤",
-							unstaged = "⚡",
-							staged = "💎",
-							conflict = "💥",
-						},
-					},
-					indent = {
-						indent_size = 2,
-						padding = 1,
-						with_markers = true,
-						indent_marker = "│",
-						last_indent_marker = "└",
-						highlight = "NeoTreeIndentMarker",
-						with_expanders = nil,
-						expander_collapsed = "",
-						expander_expanded = "",
-						expander_highlight = "NeoTreeExpander",
-					},
-				},
-				-- Use Catppuccin theme colors
-				enable_git_status = true,
-				git_status_async = true,
-				use_popups_for_input = false,
-				popup_border_style = "rounded",
-				enable_diagnostics = true,
-				sort_function = nil,
-				default_path = nil,
-				-- Beautiful colors that match your theme
-				colors = {
-					git = {
-						unstaged = "#ff6b6b",
-						staged = "#6bcf7f",
-						unmerged = "#ffa07a",
-						renamed = "#a29bfe",
-						untracked = "#fdcb6e",
-						ignored = "#636e72",
-					},
-				},
-			})
-		end,
-	},
+
 } 

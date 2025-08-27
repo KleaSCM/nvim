@@ -1,27 +1,29 @@
 --[[
- * Autocommands configuration module.
+ * 自動コマンド設定モジュール
  * 
- * This module defines various autocommands for automatic behaviors
- * and enhanced user experience.
+ * このモジュールは自動的な動作とユーザー体験向上のための
+ * 様々な自動コマンドを定義します。
  * 
  * Author: KleaSCM
  * Email: KleaSCM@gmail.com
  * File: autocmds.lua
- * Description: Autocommands and automatic behaviors
+ * Description: 自動コマンドと自動動作の設定
 --]]
 
 local api = vim.api
 
--- Create autocommands group
+-- 自動コマンドグループを作成
 local group = api.nvim_create_augroup("CursorNeovim", { clear = true })
 
--- Auto-resize windows when terminal is resized
+-- ターミナルリサイズ時にウィンドウを自動調整
+-- 理由: ターミナルサイズ変更後もレイアウトを維持するため
 api.nvim_create_autocmd("VimResized", {
 	group = group,
 	command = "wincmd =",
 })
 
--- Auto-close NvimTree when it's the last window
+-- NvimTreeが最後のウィンドウになったら自動で閉じる
+-- 理由: ファイルツリーだけが残ってしまう状況を防ぐため
 api.nvim_create_autocmd("BufEnter", {
 	group = group,
 	nested = true,
@@ -33,7 +35,8 @@ api.nvim_create_autocmd("BufEnter", {
 	end,
 })
 
--- Auto-format on save for supported filetypes
+-- サポートされているファイルタイプで保存時に自動フォーマット
+-- 理由: コードの一貫性を保ち、手動フォーマットの手間を省くため
 api.nvim_create_autocmd("BufWritePre", {
 	group = group,
 	pattern = { "*.lua", "*.py", "*.js", "*.ts", "*.json", "*.yaml", "*.yml" },
@@ -46,7 +49,8 @@ api.nvim_create_autocmd("BufWritePre", {
 	end,
 })
 
--- Auto-close quickfix and location lists when leaving them
+-- クイックフィックスとロケーションリストを離れる時に自動で閉じる
+-- 理由: 画面が散らかるのを防ぎ、作業フローをスムーズにするため
 api.nvim_create_autocmd("WinLeave", {
 	group = group,
 	pattern = "*",
@@ -63,7 +67,8 @@ api.nvim_create_autocmd("WinLeave", {
 	end,
 })
 
--- Highlight on yank
+-- ヤンク時にハイライト表示
+-- 理由: コピーした範囲を視覚的に確認できるようにするため
 api.nvim_create_autocmd("TextYankPost", {
 	group = group,
 	callback = function()
@@ -71,7 +76,8 @@ api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- Auto-save when leaving insert mode (optional)
+-- 挿入モードを離れる時に自動保存（オプション）
+-- 理由: 作業の途中でデータを失うリスクを減らすため
 api.nvim_create_autocmd("InsertLeave", {
 	group = group,
 	pattern = "*",
@@ -82,26 +88,28 @@ api.nvim_create_autocmd("InsertLeave", {
 	end,
 })
 
--- Auto-close help windows when leaving them
+-- ヘルプウィンドウを離れる時に自動で閉じる
+-- 理由: ヘルプが画面に残り続けるのを防ぐため
 api.nvim_create_autocmd("BufLeave", {
 	group = group,
 	pattern = "*help*",
 	command = "quit",
 })
 
--- Auto-hide cursor line in insert mode
+-- 挿入モードでカーソルラインを非表示
+-- 理由: 挿入時の視認性を向上させるため
 api.nvim_create_autocmd("InsertEnter", {
 	group = group,
 	pattern = "*",
 	command = "set nocursorline",
 })
 
--- Always show diagnostics in all modes
+-- 全モードで診断を常に表示
+-- 理由: エラーや警告を常に確認できるようにするため
 api.nvim_create_autocmd("ModeChanged", {
 	group = group,
 	pattern = "*",
 	callback = function()
-		-- あたし、診断を常に表示するようにしたの…エラーが見えるように（╹◡╹）
 		vim.diagnostic.config({
 			virtual_text = true,
 			signs = true,
@@ -112,65 +120,69 @@ api.nvim_create_autocmd("ModeChanged", {
 	end,
 })
 
+-- 挿入モードを離れる時にカーソルラインを表示
+-- 理由: 通常モードでの位置確認を容易にするため
 api.nvim_create_autocmd("InsertLeave", {
 	group = group,
 	pattern = "*",
 	command = "set cursorline",
 })
 
--- Auto-switch to absolute line numbers in insert mode
+-- 挿入モードで絶対行番号に切り替え
+-- 理由: 挿入時の正確な位置把握を容易にするため
 api.nvim_create_autocmd("InsertEnter", {
 	group = group,
 	pattern = "*",
 	command = "set norelativenumber",
 })
 
+-- 挿入モードを離れる時に相対行番号に戻す
+-- 理由: 通常モードでのナビゲーション効率を向上させるため
 api.nvim_create_autocmd("InsertLeave", {
 	group = group,
 	pattern = "*",
 	command = "set relativenumber",
 })
 
--- Auto-open NvimTree when opening a directory and create undo directory
+-- ディレクトリを開く時にNvimTreeを自動で開き、undoディレクトリを作成
+-- 理由: ディレクトリ作業の効率化とundo履歴の永続化のため
 api.nvim_create_autocmd("VimEnter", {
 	group = group,
 	pattern = "*",
 	callback = function()
-		-- Create undo directory
+		-- undoディレクトリを作成
 		local undo_dir = vim.fn.stdpath("data") .. "/undodir"
 		if vim.fn.isdirectory(undo_dir) == 0 then
 			vim.fn.mkdir(undo_dir, "p")
 		end
 		
-		-- Open NvimTree if opening a directory
+		-- ディレクトリを開く時にNvimTreeを開く
 		local argv0 = vim.fn.argv(0)
 		if argv0 and argv0 ~= "" and vim.fn.isdirectory(argv0) == 1 then
 			vim.cmd("NvimTreeOpen")
 			vim.cmd("wincmd l")
 		end
 		
-		-- Restore session if available
+		-- 利用可能な場合はセッションを復元
 		if vim.fn.argc() == 0 and vim.fn.filereadable("~/.vim/session.vim") == 1 then
 			vim.cmd("source ~/.vim/session.vim")
 		end
 	end,
 })
 
--- VIOLENT DIAGNOSTIC CONFIGURATION! 🔥💀⚡
+-- 診断表示の設定
+-- 理由: エラーや警告を目立たせ、開発効率を向上させるため
 api.nvim_create_autocmd("VimEnter", {
 	group = group,
 	pattern = "*",
 	callback = function()
-		-- Make diagnostics absolutely TERRIFYING!
 		vim.diagnostic.config({
-			-- Clean, simple diagnostic display! 💥⚡
 			virtual_text = true,
 			signs = true,
 			underline = true,
 			update_in_insert = false,
 			severity_sort = true,
 			
-			-- Clean, simple diagnostic display! 💥⚡
 			virtual_text = {
 				spacing = 4,
 				prefix = "",
@@ -186,24 +198,22 @@ api.nvim_create_autocmd("VimEnter", {
 				end,
 			},
 			
-			-- VIOLENT SIGNS!
 			signs = {
 				active = true,
 				values = {
 					{ name = "DiagnosticSignError", text = "💥💥💥", texthl = "DiagnosticSignError" },
 					{ name = "DiagnosticSignWarn", text = "⚠️⚠️⚠️", texthl = "DiagnosticSignWarn" },
 					{ name = "DiagnosticSignHint", text = "💡", texthl = "DiagnosticSignHint" },
-					{ name = "DiagnosticSignInfo", text = "💭", texthl = "DiagnosticSignInfo" },
+					{ name = "DiagnosticSignInfo", text = "💭", texthl = "DiagnosticSignHint" },
 				},
 			},
 			
-			-- VIOLENT UNDERLINES!
 			underline = {
 				severity = { min = vim.diagnostic.severity.HINT },
 			},
 		})
 		
-		-- VIOLENT ERROR HIGHLIGHTS!
+		-- 診断サインのハイライト設定
 		vim.api.nvim_set_hl(0, "DiagnosticError", {
 			fg = "#ff0000",
 			bg = "#000000",
@@ -236,7 +246,7 @@ api.nvim_create_autocmd("VimEnter", {
 			bold = true,
 		})
 		
-		-- VIOLENT SIGN HIGHLIGHTS!
+		-- 診断サインのハイライト設定
 		vim.api.nvim_set_hl(0, "DiagnosticSignError", {
 			fg = "#ff0000",
 			bg = "#000000",
@@ -263,31 +273,30 @@ api.nvim_create_autocmd("VimEnter", {
 	end,
 })
 
--- Auto-configure terminal buffers
+-- ターミナルバッファの自動設定
+-- 理由: ターミナルバッファを適切に管理し、バッファタブから隠すため
 api.nvim_create_autocmd("TermOpen", {
 	group = group,
 	pattern = "*",
 	callback = function()
-		-- Set buffer options to hide from buffer tabs
+		-- バッファオプションを設定してバッファタブから隠す
 		vim.bo.buftype = "terminal"
 		vim.bo.bufhidden = "hide"
 		vim.bo.swapfile = false
 		vim.bo.filetype = "terminal"
 		
-		-- Give it a unique name if it doesn't have one
+		-- 一意の名前がない場合は生成
 		local buf_name = vim.api.nvim_buf_get_name(0)
 		if buf_name == "" or buf_name:match("^term://") then
-			-- Check if this is a Telescope terminal preview
 			local buf_type = vim.bo.buftype
 			if buf_type == "terminal" then
-				-- Generate a unique name with timestamp to avoid conflicts
+				-- タイムスタンプとランダム値で一意の名前を生成
 				local timestamp = os.time()
 				local unique_name = "Terminal_" .. timestamp .. "_" .. math.random(1000, 9999)
 				
-				-- Use pcall to safely rename without errors
+				-- エラーを避けるためにpcallで安全にリネーム
 				local ok, _ = pcall(vim.cmd, "file " .. unique_name)
 				if not ok then
-					-- If renaming fails, just use a simple name
 					pcall(vim.cmd, "file Terminal_" .. timestamp)
 				end
 			end
@@ -295,67 +304,66 @@ api.nvim_create_autocmd("TermOpen", {
 	end,
 })
 
--- Auto-close terminal when job ends (safely!)
+-- ターミナルのジョブ終了時に安全に閉じる
+-- 理由: エラーを避け、適切なバッファ管理を行うため
 api.nvim_create_autocmd("TermClose", {
 	group = group,
 	pattern = "*",
 	callback = function()
-		-- あたし、ターミナルを安全に閉じるようにしたの…エラーが出ちゃうから（╹◡╹）
 		local buf = vim.api.nvim_get_current_buf()
 		if vim.api.nvim_buf_is_valid(buf) then
-			-- Use pcall to safely close without errors
+			-- エラーを避けるためにpcallで安全に閉じる
 			local ok, _ = pcall(vim.api.nvim_buf_delete, buf, { force = false })
 			if not ok then
-				-- If deletion fails, just hide it instead
+				-- 削除に失敗した場合は隠すだけ
 				vim.api.nvim_buf_set_option(buf, "bufhidden", "hide")
 			end
 		end
 	end,
 })
 
--- Handle Telescope terminal previews gracefully
+-- Telescopeのターミナルプレビューを適切に処理
+-- 理由: プレビュー機能の安定性を向上させ、エラーを防ぐため
 api.nvim_create_autocmd("TermOpen", {
 	group = group,
 	pattern = "*",
 	callback = function()
-		-- あたし、Telescopeのターミナルプレビューを美しくしたの…エラーが出ちゃうから（╹◡╹）
 		local buf = vim.api.nvim_get_current_buf()
 		local buf_name = vim.api.nvim_buf_get_name(buf)
 		
-		-- Check if this is a Telescope terminal preview
+		-- Telescopeのターミナルプレビューかチェック
 		if buf_name:match("^Telescope") or buf_name:match("^term://.*telescope") then
-			-- Set Telescope terminal options
+			-- Telescopeターミナルのオプションを設定
 			vim.bo.buftype = "terminal"
 			vim.bo.bufhidden = "hide"
 			vim.bo.swapfile = false
 			vim.bo.filetype = "terminal"
 			
-			-- Give it a unique name to avoid conflicts
+			-- 競合を避けるために一意の名前を生成
 			local timestamp = os.time()
 			local unique_name = "TelescopeTerminal_" .. timestamp .. "_" .. math.random(1000, 9999)
 			
-			-- Use pcall to safely rename without errors
+			-- エラーを避けるためにpcallで安全にリネーム
 			local ok, _ = pcall(vim.cmd, "file " .. unique_name)
 			if not ok then
-				-- If renaming fails, just use a simple name
 				pcall(vim.cmd, "file TelescopeTerminal_" .. timestamp)
 			end
 		end
 	end,
 })
 
--- Auto-clean up temporary buffers (safely!)
+-- 一時バッファの自動クリーンアップ
+-- 理由: システムバッファの保護とメモリ管理の最適化のため
 api.nvim_create_autocmd("BufHidden", {
 	group = group,
 	pattern = "*",
 	callback = function()
-		-- あたし、このバッファクリーンアップを安全にしたの…Lualine Noticesが怒っちゃって（ ; ; ）
 		local buf = vim.api.nvim_get_current_buf()
 		local buf_name = vim.api.nvim_buf_get_name(buf)
 		local buf_type = vim.bo.buftype
 		local buf_listed = vim.bo.buflisted
 		
-		-- Skip important system buffers
+		-- 重要なシステムバッファはスキップ
 		if buf_name:match("^Lualine") or 
 		   buf_name:match("^Telescope") or
 		   buf_name:match("^Neo%-tree") or
@@ -367,14 +375,14 @@ api.nvim_create_autocmd("BufHidden", {
 			return
 		end
 		
-		-- Only delete truly temporary, unlisted buffers
+		-- 真に一時的でリストされていないバッファのみ削除
 		if buf_type == "nofile" and not buf_listed then
-			-- Check if buffer is still valid and not in use
+			-- バッファが有効で使用中でないかチェック
 			if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_get_option(buf, "modifiable") then
-				-- Use pcall to safely delete without errors
+				-- エラーを避けるためにpcallで安全に削除
 				local ok, _ = pcall(vim.api.nvim_buf_delete, buf, { force = false })
 				if not ok then
-					-- If deletion fails, just hide it instead
+					-- 削除に失敗した場合は隠すだけ
 					vim.api.nvim_buf_set_option(buf, "bufhidden", "hide")
 				end
 			end
@@ -382,7 +390,8 @@ api.nvim_create_autocmd("BufHidden", {
 	end,
 })
 
--- Auto-set filetype for specific patterns
+-- 特定のパターンのファイルタイプを自動設定
+-- 理由: 適切なシンタックスハイライトと機能を提供するため
 api.nvim_create_autocmd("BufNewFile", {
 	group = group,
 	pattern = "*.conf",
@@ -407,15 +416,10 @@ api.nvim_create_autocmd("BufRead", {
 	command = "set filetype=sh",
 })
 
--- Auto-create undo directory
--- (Now handled in the combined VimEnter autocmd above)
-
--- Auto-save session
+-- セッションの自動保存
+-- 理由: 作業環境の状態を保持し、次回起動時に復元できるようにするため
 api.nvim_create_autocmd("VimLeavePre", {
 	group = group,
 	pattern = "*",
 	command = "mksession! ~/.vim/session.vim",
-})
-
--- Auto-restore session
--- (Now handled in the combined VimEnter autocmd above) 
+}) 

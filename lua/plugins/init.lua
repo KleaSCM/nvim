@@ -31,4 +31,18 @@ return {
 
 	-- Tools plugins (git integration, utilities)
 	{ import = "plugins.tools" },
+	
+	-- Auto formatting and bullet support
+	{ import = "plugins.tools.formatting-bullets" },
+	
+	-- Obsidian note-taking support
+	{ import = "plugins.tools.obsidian" },
+	
+	-- Colorizer for color codes
+	{ import = "plugins.tools.colorizer" },
+	
+	-- Database support and SQL features
+	{ import = "plugins.tools.database" },
+	
+	-- Utility functions are loaded in init.lua, not as plugins
 } 

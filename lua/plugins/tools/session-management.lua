@@ -104,6 +104,66 @@ return {
 					},
 				},
 			})
+			
+			-- あたし、ASCIIアートの色を強制的に設定したの…黄色が嫌だったから（╹◡╹）
+			-- Force proper colors for the ASCII art
+			vim.api.nvim_create_autocmd("VimEnter", {
+				callback = function()
+					-- Wait a bit for dashboard to load
+					vim.defer_fn(function()
+						-- Force white color for ASCII art
+						vim.cmd("highlight DashboardFooter guifg=#ffffff guibg=NONE")
+						vim.cmd("highlight DashboardHeader guifg=#ffffff guibg=NONE")
+						vim.cmd("highlight DashboardCenter guifg=#ffffff guibg=NONE")
+						vim.cmd("highlight DashboardShortcut guifg=#ffffff guibg=NONE")
+						
+						-- Force specific colors for different parts
+						vim.cmd("highlight DashboardShortcutIcon guifg=#fd79a8 guibg=NONE") -- Pink
+						vim.cmd("highlight DashboardShortcutSection guifg=#74b9ff guibg=NONE") -- Blue
+						vim.cmd("highlight DashboardShortcutKey guifg=#fdcb6e guibg=NONE") -- Yellow
+						vim.cmd("highlight DashboardShortcutDesc guifg=#6bcf7f guibg=NONE") -- Green
+						
+						-- Force white for the ASCII art footer
+						vim.cmd("highlight DashboardFooter guifg=#ffffff guibg=NONE ctermfg=white ctermbg=NONE")
+					end, 100)
+				end,
+				once = true,
+			})
+			
+			-- Also apply colors when dashboard is opened
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "DashboardReady",
+				callback = function()
+					-- Force proper colors for the dashboard
+					vim.cmd("highlight DashboardFooter guifg=#ffffff guibg=NONE ctermfg=white ctermbg=NONE")
+					vim.cmd("highlight DashboardHeader guifg=#ffffff guibg=NONE ctermfg=white ctermbg=NONE")
+					vim.cmd("highlight DashboardCenter guifg=#ffffff guibg=NONE ctermfg=white ctermbg=NONE")
+					vim.cmd("highlight DashboardShortcut guifg=#ffffff guibg=NONE ctermfg=white ctermbg=NONE")
+					
+					-- Force specific colors for different parts
+					vim.cmd("highlight DashboardShortcutIcon guifg=#fd79a8 guibg=NONE") -- Pink
+					vim.cmd("highlight DashboardShortcutSection guifg=#74b9ff guibg=NONE") -- Blue
+					vim.cmd("highlight DashboardShortcutKey guifg=#fdcb6e guibg=NONE") -- Yellow
+					vim.cmd("highlight DashboardShortcutDesc guifg=#6bcf7f guibg=NONE") -- Green
+				end,
+			})
+			
+			-- Add a command to force refresh dashboard colors
+			vim.api.nvim_create_user_command("DashboardColors", function()
+				-- Force proper colors for the dashboard
+				vim.cmd("highlight DashboardFooter guifg=#ffffff guibg=NONE ctermfg=white ctermbg=NONE")
+				vim.cmd("highlight DashboardHeader guifg=#ffffff guibg=NONE ctermfg=white ctermbg=NONE")
+				vim.cmd("highlight DashboardCenter guifg=#ffffff guibg=NONE ctermfg=white ctermbg=NONE")
+				vim.cmd("highlight DashboardShortcut guifg=#ffffff guibg=NONE ctermfg=white ctermbg=NONE")
+				
+				-- Force specific colors for different parts
+				vim.cmd("highlight DashboardShortcutIcon guifg=#fd79a8 guibg=NONE") -- Pink
+				vim.cmd("highlight DashboardShortcutSection guifg=#74b9ff guibg=NONE") -- Blue
+				vim.cmd("highlight DashboardShortcutKey guifg=#fdcb6e guibg=NONE") -- Yellow
+				vim.cmd("highlight DashboardShortcutDesc guifg=#6bcf7f guibg=NONE") -- Green
+				
+				vim.notify("✨ Dashboard colors refreshed! Your ASCII girl should be visible now!", vim.log.levels.INFO)
+			end, {})
 		end,
 	},
 
