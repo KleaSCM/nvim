@@ -1,0 +1,1 @@
+/home/klea/.config/omarchy/current/theme/neovim.lua
