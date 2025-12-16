@@ -56,10 +56,10 @@ return {
     optional = true,
     opts = {
       spec = {
-        { "<leader>e", group = "Emoji", icon = "" },
-        { "<leader>ee", "<cmd>Telescope emoji<cr>", desc = "Emoji Picker", icon = "" },
-        { "<leader>es", "<cmd>Telescope symbols<cr>", desc = "Symbols", icon = "" },
-        { "<leader>eh", "<cmd>echo 'Use :emoji for emoji list'<cr>", desc = "Emoji Help", icon = "" },
+        { "<leader>e", group = "Emoji" },
+        { "<leader>ee", "<cmd>Telescope emoji<cr>", desc = "Emoji Picker" },
+        { "<leader>es", "<cmd>Telescope symbols<cr>", desc = "Symbols" },
+        { "<leader>eh", "<cmd>echo 'Use :emoji for emoji list'<cr>", desc = "Emoji Help" },
       },
     },
   },

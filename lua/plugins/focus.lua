@@ -54,7 +54,7 @@ return {
       end,
     },
     keys = {
-      { "<leader>z", "<cmd>ZenMode<cr>", desc = "  Zen Mode  ", icon = " " },
+      { "<leader>z", "<cmd>ZenMode<cr>", desc = "  Zen Mode  " },
     },
   },
   
@@ -148,11 +148,11 @@ return {
     optional = true,
     opts = {
       spec = {
-        { "<leader>f", group = "  Focus  ", icon = " " },
-        { "<leader>fw", "<cmd>Twilight<cr>", desc = "  Twilight Focus  ", icon = " " },
-        { "<leader>fn", "<cmd>NoNeckPain<cr>", desc = "  No Neck Pain  ", icon = " " },
-        { "<leader>fz", "<cmd>ZenMode<cr>", desc = "  Zen Mode  ", icon = " " },
-        { "<leader>fc", "<cmd>hi clear<cr>", desc = "  Clear Highlights  ", icon = " " },
+        { "<leader>f", group = "  Focus  " },
+        { "<leader>fw", "<cmd>Twilight<cr>", desc = "  Twilight Focus  " },
+        { "<leader>fn", "<cmd>NoNeckPain<cr>", desc = "  No Neck Pain  " },
+        { "<leader>fz", "<cmd>ZenMode<cr>", desc = "  Zen Mode  " },
+        { "<leader>fc", "<cmd>hi clear<cr>", desc = "  Clear Highlights  " },
       },
     },
   },

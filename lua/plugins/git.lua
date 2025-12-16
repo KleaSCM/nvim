@@ -70,8 +70,8 @@ return {
       })
     end,
     keys = {
-      { "<leader>gb", "<cmd>BlameToggle<cr>", desc = "  Git Blame  ", icon = " " },
-      { "<leader>gB", "<cmd>BlameOpen<cr>", desc = "  Git Blame File  ", icon = " " },
+      { "<leader>gb", "<cmd>BlameToggle<cr>", desc = "  Git Blame  " },
+      { "<leader>gB", "<cmd>BlameOpen<cr>", desc = "  Git Blame File  " },
     },
   },
   
@@ -99,10 +99,10 @@ return {
       require("telescope").load_extension("advanced_git_search")
     end,
     keys = {
-      { "<leader>gs", "<cmd>Telescope advanced_git_search<cr>", desc = "  Git Search  ", icon = " " },
-      { "<leader>gc", "<cmd>Telescope git_commits<cr>", desc = "  Git Commits  ", icon = " " },
-      { "<leader>gC", "<cmd>Telescope git_bcommits<cr>", desc = "  Buffer Commits  ", icon = " " },
-      { "<leader>gb", "<cmd>Telescope git_branches<cr>", desc = "  Git Branches  ", icon = " " },
+      { "<leader>gs", "<cmd>Telescope advanced_git_search<cr>", desc = "  Git Search  " },
+      { "<leader>gc", "<cmd>Telescope git_commits<cr>", desc = "  Git Commits  " },
+      { "<leader>gC", "<cmd>Telescope git_bcommits<cr>", desc = "  Buffer Commits  " },
+      { "<leader>gb", "<cmd>Telescope git_branches<cr>", desc = "  Git Branches  " },
     },
   },
   
@@ -182,8 +182,8 @@ return {
       })
     end,
     keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "  Git Diff  ", icon = " " },
-      { "<leader>gh", "<cmd>DiffviewFileHistory<cr>", desc = "  File History  ", icon = " " },
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "  Git Diff  " },
+      { "<leader>gh", "<cmd>DiffviewFileHistory<cr>", desc = "  File History  " },
     },
   },
   
@@ -193,7 +193,7 @@ return {
     optional = true,
     opts = {
       spec = {
-        { "<leader>g", group = "  Git  ", icon = " " },
+        { "<leader>g", group = "  Git  " },
       },
     },
   },

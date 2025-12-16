@@ -29,15 +29,15 @@ return {
       local timer = vim.loop.new_timer()
       timer:start(300000, 300000, vim.schedule_wrap(auto_save_session))
       
-      -- Restore last session on startup if no arguments
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          if vim.fn.argc() == 0 then
-            require("persistence").load()
-          end
-        end,
-        nested = true,
-      })
+      -- Don't auto-restore session on startup - let user choose
+      -- vim.api.nvim_create_autocmd("VimEnter", {
+      --   callback = function()
+      --     if vim.fn.argc() == 0 then
+      --       require("persistence").load()
+      --     end
+      --   end,
+      --   nested = true,
+      -- })
     end,
   },
   
@@ -51,7 +51,8 @@ return {
       auto_session_root_dir = vim.fn.stdpath("data") .. "/sessions/",
       auto_session_enabled = true,
       auto_save_enabled = true,
-      auto_restore_enabled = true,
+      auto_restore_enabled = false,
+      auto_session_enable_last_session = false,
       auto_session_suppress_dirs = nil,
       auto_session_use_git_branch = false,
       -- Session controls
@@ -152,8 +153,8 @@ return {
     optional = true,
     opts = {
       spec = {
-        { "<leader>s", group = "  Session  ", icon = " " },
-        { "<leader>p", group = "  Project  ", icon = " " },
+        { "<leader>s", group = "  Session  " },
+        { "<leader>p", group = "  Project  " },
       },
     },
   },
