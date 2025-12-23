@@ -6,3 +6,8 @@ debug
 foo.*
 *.log
 data
+lazyvim.json.bak
+.gitignore
+init.lua.bak
+lazy-lock.json.bak
+StyleGuide.txt
